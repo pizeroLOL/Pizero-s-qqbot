@@ -40,7 +40,7 @@ def keyword(message,uid,gid = None):
         return jrrp(types,uid,gid)
 
     elif message[0:5] == '摸摸sms':
-        uid = '3612079899'
+        uid = '' #待填写
         return poke(uid,gid)
     elif message[0:5] == '可乐兔三连' or message[0:5] == '可樂兔三連':
         msgs=['可乐兔整合包更了吗','可乐兔模组更了吗','提学分了吗']
