@@ -1,5 +1,8 @@
 # qq bot api
 一个基于go cqhttp的小插件
+## 关于github
+github只做action编译和做镜像使用，请在[gitee](https://gitee.com/pizero-hihi/qq-bot-api)上提问和贡献代码
+
 ## 许可
 在写明出处的情况下允许任何法律范围内的使用，作者不对使用后果负责，请仔细审阅代码。
  
