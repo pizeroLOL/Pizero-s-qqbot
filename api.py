@@ -8,8 +8,7 @@ config = configparser.ConfigParser()
 
 ## rp-人品
 ## timeis-时间
-admin='2774737215'
-bot_qq="3282686818"
+
 
 def keyword(message,uid,gid = None):
     uid=str(uid)
