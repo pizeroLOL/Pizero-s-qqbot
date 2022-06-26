@@ -161,7 +161,7 @@ def keyword(message,uid,gid = None):
 ## uid为发送者
 ## gid为收到消息的群
 
-def helps(uid,gid): #帮助
+def helps(uid,gid = None): #帮助
     next_len = '%0A'
     if fuck_type == True:
         klt_yes = '输入（可乐兔三联）来让可乐兔再次快乐'
@@ -172,7 +172,7 @@ def helps(uid,gid): #帮助
         GoCqhttpApi.sendmsg(msg,uid,gid)
         time.sleep(1)
 
-def good_night(uid,gid):  
+def good_night(uid,gid = None):  
     msg='晚安'
     GoCqhttpApi.sendmsg(msg,uid,gid)
 
