@@ -1,5 +1,11 @@
 from flask import Flask, request
 import initialization
+import configparser
+
+config = configparser.ConfigParser()
+config.read('app-config.cfg')
+
+main_topsecret = config['main']
 
 app = Flask(__name__)
 
@@ -21,4 +27,4 @@ def return_app():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='127.0.0.1', port=20301)# 此处的 host和 port对应上面 yml文件的设置
+    app.run(debug=main_topsecret.getboolean('debug'), host=main_topsecret['host'], port=main_topsecret["port"])# 此处的 host和 port对应上面 yml文件的设置

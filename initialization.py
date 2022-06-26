@@ -31,6 +31,13 @@ def initialization(section,option): # 初始化
             config['Mascot']['poke_type'] = default_type
         elif option == 'all':
             config['Mascot']={'poke_type':default_type}
+    elif section == 'main':
+        if option == 'host':
+            config['main']['host'] = '127.0.0.1'
+        elif option == 'port':
+            config["main"]["port"] = '20301'
+        elif option == 'debug':
+            config["main"]["debug"] = default_type
 
     with open('app-config.cfg','w') as configfile:
         config.write(configfile)
@@ -38,6 +45,16 @@ def initialization(section,option): # 初始化
 # 检查config完整性
 ## 检查uid表完整性
 def check():
+    if config.has_section('main') == True:
+        initialization_name = 'main'
+        if config.has_option(initialization_name,'host') == False:
+            initialization(initialization_name,'host')
+        if config.has_option(initialization_name, "port") == False:
+            initialization(initialization_name, "port")
+        if config.has_option(initialization_name, "debug") == False:
+            initialization(initialization_name, "debug")
+    else:
+        initialization('main','all')
     if config.has_section('uid') == True :
         initialization_name='uid'
         if config.has_option(initialization_name,'Mascot_id') == False:
