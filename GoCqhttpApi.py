@@ -1,5 +1,7 @@
 import requests
 
+
+
 def sendmsg(msg,uid,gid = None):
     if gid != None:
         requests.get('http://127.0.0.1:20300/send_group_msg?group_id={0}&message={1}'.format(gid,msg))

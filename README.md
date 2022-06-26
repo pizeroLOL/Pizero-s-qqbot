@@ -7,7 +7,7 @@ github只做action编译和做镜像使用，请在[gitee](https://gitee.com/piz
 在写明出处的情况下允许任何法律范围内的使用，作者不对使用后果负责，请仔细审阅代码。
  
 ## 开发代办
-1. - [ ] 制作基于flask的服务端
+1. - [x] 制作基于flask的服务端
 2. - [ ] 添加初始化
       - [x] robot_id、admin_id、Mascot_id
       - [x] klt_id、klt_id_default
@@ -30,13 +30,14 @@ github只做action编译和做镜像使用，请在[gitee](https://gitee.com/piz
 7. - [ ] 优化运行速度
       - [ ] 使用cython编译
       - [ ] 将大部分go-cqhttp的api转换为def
-      - [ ] 允许使用config调整是否启用功能
-         - [ ] 返回(request.get)地址
-         - [ ] 今日人品
-         - [ ] 数据可视化
-         - [x] 部分恶搞内容
-8. - [ ] 测试是否可在阿里云函数(使用端口监听)上使用
-9.  - [ ] 完善GoCqhttpApi中go-cqhttp的api与CQ码调用
+8. - [ ] 允许使用config调整是否启用功能
+      - [ ] 返回(request.get)地址
+      - [x] 接收地址
+      - [ ] 今日人品
+      - [ ] 数据可视化
+      - [x] 部分恶搞内容
+9. - [ ] 测试是否可在阿里云函数(使用端口监听)上使用
+10. - [ ] 完善GoCqhttpApi中go-cqhttp的api与CQ码调用
    - [ ] 添加其他api并添加初始化脚本
 11. - [ ] 完善使用文档(readme等)
 12.  - [x] 将使用说明添加进“#help”等机器人自带的命令查询
