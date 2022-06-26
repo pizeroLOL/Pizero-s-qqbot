@@ -7,6 +7,7 @@ config = configparser.ConfigParser()
 config.read('app-config.cfg')
 
 default_qq='123456789'
+default_type = 'True'
 
 def initialization(section,option): # 初始化
     if section == 'uid':
@@ -16,13 +17,24 @@ def initialization(section,option): # 初始化
             config['uid']['admin_id'] = default_qq
         elif option == 'robot_id':
             config['uid']['robot_id'] = default_qq
-        else:
+        elif option == 'all':
             config['uid'] = {'Mascot_id':default_qq,
                              'admin_id':default_qq,
                              'robot_id':default_qq}
-    # elif section == 'Mascot':
-    #     if option == 'fuck_Mascot_id':
-    #         config['Mascot']
+    elif section == 'klt':
+        if option == 'uid':
+            config['klt']['uid'] = default_qq
+        elif option == 'fuck_type':
+            config['klt']['fuck_type'] = default_type
+        elif option == 'all':
+            config['klt'] = {'uid':default_qq,
+                             'fuck_type':default_type}
+    elif section == 'Mascot':
+        if option == 'poke':
+            config['Mascot']['poke_type'] = default_type
+        elif option == 'all':
+            config['Mascot']={'poke_type':default_type}
+
     with open('app-config.cfg','w') as configfile:
         config.write(configfile)
 
@@ -37,16 +49,42 @@ if config.has_section('uid') == True :
     if config.has_option(initialization_name,'robot_id') == False:
         initialization(initialization_name,'robot_id')
 else:
-    initialization('uid')
+    initialization('uid','all')
 
-# if config.has_section('Mascot')
+## 检查吉klt选项
+if config.has_section('klt') == True:
+    initialization_name = "klt"
+    if config.has_option(initialization_name, "uid") == False:
+        initialization(initialization_name,'uid')
+    if config.has_option(initialization_name, 'fuck_type') == False:
+        initialization(initialization_name,'fuck_type')
+else:
+    initialization('klt','all')
+
+##检查吉祥物选项
+if config.has_section('Mascot') == True:
+    initialization_name = 'Mascot'
+    if config.has_option(initialization_name,'poke_type') == False:
+        initialization(initialization_name,'poke_type')
+else:
+    initialization(initialization_name,'all')
 
 # 参数导入
+## uid表
 uid_topsecret = config['uid']
 Mascot_id = str(uid_topsecret['Mascot_id'])
 admin_id = str(uid_topsecret['admin_id'])
 robot_id = str(uid_topsecret['robot_id'])
 at_robot = '[CQ:at,qq='+robot_id+']'
+
+## klt表
+klt_topsecret = config['klt']
+klt_id = str(klt_topsecret['uid'])
+fuck_type = klt_topsecret.getboolean('fucktype')
+
+# 吉祥物表
+Mascot_topsecret = config['Mascot']
+poke_type = Mascot_topsecret.getboolean('poke_type')
 
 def keyword(message,uid,gid = None):
     uid=str(uid)
@@ -78,15 +116,16 @@ def keyword(message,uid,gid = None):
         return jrrp.jrrp(types,uid,gid)
 
     elif message[0:5] == '摸摸吉祥物':
-        uid = Mascot_id
-        return GoCqhttpApi.poke(uid,gid)
+        if poke_type == True:
+            uid = Mascot_id
+            return GoCqhttpApi.poke(uid,gid)
     elif message[0:5] == '可乐兔三连' or message[0:5] == '可樂兔三連':
-        # if fuck_klt == True:
-        msgs=['可乐兔整合包更了吗','可乐兔模组更了吗','提学分了吗']
-        for msg in msgs:
-            GoCqhttpApi.sendmsg(msg,uid,gid)
-            time.sleep(1)
-    
+        if fuck_type == True:
+            msgs=['可乐兔整合包更了吗','可乐兔模组更了吗','提学分了吗']
+            for msg in msgs:
+                GoCqhttpApi.sendmsg(msg,uid,gid)
+                time.sleep(1)
+        
     elif message[0: 5] == '#poke' or message[0:2] == '#戳' or message[0:4] == '#戳一戳' :
         return others_poke(message,uid,gid)
 
@@ -123,8 +162,15 @@ def keyword(message,uid,gid = None):
 ## gid为收到消息的群
 
 def helps(uid,gid): #帮助
-    msg='https://docs.qq.com/doc/DVkJTdGxobFlHVm10?groupUin=4H%25252FXMn9Z1JVTKy99sMDYfg%25253D%25253D&ADUIN=2774737215&ADSESSION=1655715075&ADTAG=CLIENT.QQ.7824_.0&ADPUBNO=27190&u=9786d41c28d7486b8ab871637dd2ed35'
-    GoCqhttpApi.sendmsg(msg,uid,gid)
+    next_len = '%0A'
+    if fuck_type == True:
+        klt_yes = '输入（可乐兔三联）来让可乐兔再次快乐'
+    if poke_type == True:
+        poke_yes = '输入（摸摸吉祥物）让吉祥物再次快乐'
+    msgs=['输入#help来获取本帮助'+next_len+'@QQ 机器人来通过戳一戳（双击头像的那种）来确认是否在线'+next_len+'输入（jrrp）或者（今日人品）来获得今天的“人品”'+next_len+'输入（#点歌）或者（#點歌）来通过输入songid点歌','使用案例'+next_len + '    #点歌（空格）<QQ音乐/网易云音乐/qqyy/qq/wyyyy/wy>（空格）<歌曲id，怎么获取自己查>','输入（晚安）时，机器人会返回一句晚安'+next_len + '输入（#人品查询（空格）<查询uid>）来获取某人的“人品”'+next_len + '输入（#戳一戳）来让机器人双击不方便戳的人',klt_yes,poke_yes]
+    for msg in msgs:
+        GoCqhttpApi.sendmsg(msg,uid,gid)
+        time.sleep(1)
 
 def good_night(uid,gid):  
     msg='晚安'
