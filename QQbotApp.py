@@ -1,11 +1,10 @@
-import time
 import GoCqhttpApi
 import jrrp
+import time
 import configparser
 
 config = configparser.ConfigParser()
 config.read('app-config.cfg')
-
 
 # 参数导入
 ## uid表
@@ -18,7 +17,7 @@ at_robot = '[CQ:at,qq='+robot_id+']'
 ## klt表
 klt_topsecret = config['klt']
 klt_id = str(klt_topsecret['uid'])
-fuck_type = klt_topsecret.getboolean('fucktype')
+fuck_type = klt_topsecret.getboolean('fuck_type')
 
 # 吉祥物表
 Mascot_topsecret = config['Mascot']
@@ -101,14 +100,16 @@ def keyword(message,uid,gid = None):
 
 def helps(uid,gid = None): #帮助
     next_len = '%0A'
-    if fuck_type == True:
-        klt_yes = '输入（可乐兔三联）来让可乐兔再次快乐'
-    if poke_type == True:
-        poke_yes = '输入（摸摸吉祥物）让吉祥物再次快乐'
-    msgs=['输入#help来获取本帮助'+next_len+'@QQ 机器人来通过戳一戳（双击头像的那种）来确认是否在线'+next_len+'输入（jrrp）或者（今日人品）来获得今天的“人品”'+next_len+'输入（#点歌）或者（#點歌）来通过输入songid点歌','使用案例'+next_len + '    #点歌（空格）<QQ音乐/网易云音乐/qqyy/qq/wyyyy/wy>（空格）<歌曲id，怎么获取自己查>','输入（晚安）时，机器人会返回一句晚安'+next_len + '输入（#人品查询（空格）<查询uid>）来获取某人的“人品”'+next_len + '输入（#戳一戳）来让机器人双击不方便戳的人',klt_yes,poke_yes]
+    msgs=['输入%23help来获取本帮助'+next_len+'@QQ 机器人来通过戳一戳（双击头像的那种）来确认是否在线'+next_len+'输入（jrrp）或者（今日人品）来获得今天的“人品”'+next_len+'输入（%23点歌）或者（%23點歌）来通过输入songid点歌','使用案例'+next_len + '    %23点歌（空格）<QQ音乐/网易云音乐/qqyy/qq/wyyyy/wy>（空格）<歌曲id，怎么获取自己查>','输入（晚安）时，机器人会返回一句晚安'+next_len + '输入（%23人品查询（空格）<查询uid>）来获取某人的“人品”'+next_len + '输入（%23戳一戳）来让机器人双击不方便戳的人']
     for msg in msgs:
         GoCqhttpApi.sendmsg(msg,uid,gid)
         time.sleep(1)
+    if fuck_type == True:
+        klt_yes = '输入（可乐兔三联）来让可乐兔再次快乐'
+        GoCqhttpApi.sendmsg(klt_yes,uid,gid)
+    if poke_type == True:
+        poke_yes = '输入（摸摸吉祥物）让吉祥物再次快乐'
+        GoCqhttpApi.sendmsg(poke_yes,uid,gid)
 
 def good_night(uid,gid = None):  
     msg='晚安'

@@ -8,11 +8,11 @@ github只做action编译和做镜像使用，请在[gitee](https://gitee.com/piz
  
 ## 开发代办
 1. - [x] 制作基于flask的服务端
-2. - [ ] 添加初始化
+2. - [x] 添加初始化
       - [x] robot_id、admin_id、Mascot_id
       - [x] klt_id、klt_id_default
       - [x] poke_Mascot、 poke_Mascot_default
-      - [ ] 测试可用
+      - [x] 测试可用
 3. - [x] 将api.py只封装go-cqhttp的api和cq码，并将应用迁移到app，并改名为GoCqhttpApi
 4. - [ ] 将由configparser管理的今日人品模块迁移到pandas
 5. - [ ] 屏蔽词 (pandas)

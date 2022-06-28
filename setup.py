@@ -1,0 +1,3 @@
+import initialization
+
+initialization.check
