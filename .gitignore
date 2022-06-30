@@ -3,3 +3,6 @@ main.py
 jrrp.ini
 app-config.cfg
 *.pyc
+Lib
+Scripts
+pyvenv.cfg
