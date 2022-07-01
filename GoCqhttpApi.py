@@ -1,12 +1,17 @@
-import requests
+import requests,configparser
 
+config = configparser.ConfigParser()
+config.read('app-config.cfg')
 
+uid_topsecret = config['request']
+host = str(uid_topsecret['request-host'])
+post = str(uid_topsecret['request-post'])
 
 def sendmsg(msg,uid,gid = None):
     if gid != None:
-        requests.get('http://127.0.0.1:20300/send_group_msg?group_id={0}&message={1}'.format(gid,msg))
+        requests.get('http://{0}:{1}/send_group_msg?group_id={2}&message={3}'.format(host,post,gid,msg))
     else :
-        requests.get('http://127.0.0.1:20300/send_private_msg?user_id={0}&message={1}'.format(uid,msg))
+        requests.get('http://{0}:{1}/send_private_msg?user_id={0}&message={1}'.format(host,post,uid,msg))
 
 def poke(uid,gid = None):  #戳一戳
     msg='[CQ:poke,qq='+uid+']'

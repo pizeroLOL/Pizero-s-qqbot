@@ -1,3 +1,3 @@
 import initialization
 
-initialization.check
+initialization.check()

@@ -42,6 +42,19 @@ def initialization(section,option): # 初始化
             config['main'] = {'host':'127.0.0.1',
                               'port':'20301',
                               'debug':default_type}
+    elif section == 'request':
+        if option == 'request-host':
+            config['request']['request-host'] = '127.0.0.1'
+        elif option == 'request-post':
+            config["request"]['request-post'] = '20300'
+        elif option == 'all':
+            config["request"] = {'request-host':'127.0.0.1',
+                                 'request-post':'20300'}
+    elif section == 'Function':
+        if option == 'jrrp':
+            config['Function']['jrrp'] = default_type
+        elif option == 'all':
+            config['Function'] = {'jrrp':default_type}
 
     with open('app-config.cfg','w') as configfile:
         config.write(configfile)
@@ -89,3 +102,18 @@ def check():
     else:
         initialization('main','all')
     
+    if config.has_section('request') == True:
+        initialization_name = 'request'
+        if config.has_option(initialization_name, 'request-host') == False:
+            initialization(initialization_name,'request-host')
+        if config.has_option(initialization_name,'request-post') == False:
+            initialization(initialization_name,'request-post')
+    else:
+        initialization('request','all')
+    
+    if config.has_section('Function') == True:
+        initialization_name = 'Function'
+        if config.has_option(initialization_name, 'jrrp') == False:
+            initialization(initialization_name,'jrrp')
+    else:
+        initialization('Function','all')

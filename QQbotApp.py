@@ -1,7 +1,4 @@
-import GoCqhttpApi
-import jrrp
-import time
-import configparser
+import GoCqhttpApi,jrrp,time,configparser
 
 config = configparser.ConfigParser()
 config.read('app-config.cfg')
@@ -22,6 +19,8 @@ fuck_type = klt_topsecret.getboolean('fuck_type')
 # 吉祥物表
 Mascot_topsecret = config['Mascot']
 poke_type = Mascot_topsecret.getboolean('poke_type')
+
+# Function表
 
 def keyword(message,uid,gid = None):
     uid=str(uid)

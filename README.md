@@ -15,7 +15,7 @@ github只做action编译和做镜像使用，请在[gitee](https://gitee.com/piz
       - [x] 测试可用
 3. - [x] 将api.py只封装go-cqhttp的api和cq码，并将应用迁移到app，并改名为GoCqhttpApi
 4. - [ ] 将由configparser管理的今日人品模块迁移到pandas
-5. - [ ] 屏蔽词 (pandas)
+5. - [ ] 屏蔽词 (pandas、configparser)
       - [ ] 屏蔽词管理员
       - [ ] 屏蔽词汇报与记录
       - [ ] 屏蔽词触发次数记录
@@ -31,9 +31,10 @@ github只做action编译和做镜像使用，请在[gitee](https://gitee.com/piz
       - [ ] 使用cython编译
       - [ ] 将大部分go-cqhttp的api转换为def
 8. - [ ] 允许使用config调整是否启用功能
-      - [ ] 返回(request.get)地址
+      - [x] 返回(request.get)地址
       - [x] 接收地址
-      - [ ] 今日人品
+      - [x] 今日人品
+      - [ ] 允许根据群调整今日人品是否启用
       - [ ] 数据可视化
       - [x] 部分恶搞内容
 9. - [ ] 测试是否可在阿里云函数(使用端口监听)上使用
