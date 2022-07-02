@@ -1,3 +1,2 @@
 import initialization
-
 initialization.check()

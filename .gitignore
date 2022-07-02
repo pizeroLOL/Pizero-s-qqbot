@@ -6,3 +6,4 @@ app-config.cfg
 Lib
 Scripts
 pyvenv.cfg
+__pycache__
