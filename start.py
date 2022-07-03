@@ -1,4 +1,4 @@
 import initialization,os
 
 initialization.check()
-os.system('python3 server.py')
+os.system('python server.py')
