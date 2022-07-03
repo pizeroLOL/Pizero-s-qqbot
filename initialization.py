@@ -5,114 +5,39 @@ config.read('app-config.cfg')
 
 default_qq='123456789'
 default_type = 'True'
+default_host = '127.0.0.1'
 
-def initialization(section,option): # 初始化
-    if section == 'uid' and option == 'Mascot_id':
-        config['uid']['Mascot_id'] = default_qq
-    elif section == 'uid' and option == 'admin_id':
-        config['uid']['admin_id'] = default_qq
-    elif section == 'uid' and option == 'robot_id':
-        config['uid']['robot_id'] = default_qq
-    elif section == 'uid' and option == 'all':
-        config['uid'] = {'Mascot_id':default_qq,
-                         'admin_id':default_qq,
-                         'robot_id':default_qq}
+configlist = ['uid','klt','Mascot','main','request','Function']
+config.defaults()
 
-    elif section == 'klt' and  option == 'uid':
-        config['klt']['uid'] = default_qq
-    elif section == 'klt' and option == 'fuck_type':
-        config['klt']['fuck_type'] = default_type
-    elif section == 'klt' and option == 'all':
-        config['klt'] = {'uid':default_qq,
-                         'fuck_type':default_type}
-
-    elif section == 'Mascot' and option == 'poke':
-        config['Mascot']['poke_type'] = default_type
-    elif section == 'Mascot' and option == 'all':
-        config['Mascot']={'poke_type':default_type}
-            
-    elif section == 'main' and option == 'host':
-        config['main']['host'] = '127.0.0.1'
-    elif section == 'main' and option == 'port':
-        config["main"]["port"] = '20301'
-    elif section == 'main' and option == 'debug':
-        config["main"]["debug"] = default_type
-    elif section == 'main' and option == 'all':
-        config['main'] = {'host':'127.0.0.1',
-                          'port':'20301',
-                          'debug':default_type}
-    
-    elif section == 'request' and option == 'request-host':
-        config['request']['request-host'] = '127.0.0.1'
-    elif section == 'request' and option == 'request-post':
-        config["request"]['request-post'] = '20300'
-    elif section == 'request' and option == 'all':
-        config["request"] = {'request-host':'127.0.0.1',
-                                 'request-post':'20300'}
-        
-    elif section == 'Function' and option == 'jrrp':
-        config['Function']['jrrp'] = default_type
-    elif section == 'Function' and option == 'all':
-        config['Function'] = {'jrrp':default_type}
+def check():
+    for i in configlist:
+        if i == 'uid':
+            lib = ['Mascot_id','admin_id','robot_id']
+        elif i == 'klt':
+            lib = ['uid','fuck_type']
+        elif i == 'Mascot':
+            lib = ['poke_type']
+        elif i == 'main':
+            lib = ['host','port','debug']
+        elif i == 'request':
+            lib = ['request-host','request-post']
+        elif i == 'Function':
+            lib = ['jrrp','look_for_group_id','look_for_group_type']
+        dic = None
+        if config.has_section(i) == False:
+            config.add_section(i)
+        for n in lib:
+            if config.has_option(i,n) == False and 'id' in n:
+                config[i][n] = default_qq
+            elif config.has_option(i, n) == False and ('type' in n or n == 'debug' or n == 'jrrp'):
+                config[i][n] = default_type
+            elif config.has_option(i, n) == False and 'host' in n:
+                config[i][n] = default_host
+            elif config.has_option(i, n) == False and "port"in n and i == 'main':
+                config[i][n] = '20301'
+            elif config.has_option(i, n) == False and n == 'request-post':
+                config[i][n] = '20300'
 
     with open('app-config.cfg','w') as configfile:
         config.write(configfile)
-
-# 检查config完整性
-## 检查uid表完整性
-def check():
-    if config.has_section('uid') == True :
-        initialization_name='uid'
-        if config.has_option(initialization_name,'Mascot_id') == False:
-            initialization(initialization_name,'Mascot_id')
-        if config.has_option(initialization_name,'admin_id') == False:
-            initialization(initialization_name,'admin_id')
-        if config.has_option(initialization_name,'robot_id') == False:
-            initialization(initialization_name,'robot_id')
-    else:
-        initialization('uid','all')
-
-    ## 检查吉klt选项
-    if config.has_section('klt') == True:
-        initialization_name = "klt"
-        if config.has_option(initialization_name, "uid") == False:
-            initialization(initialization_name,'uid')
-        if config.has_option(initialization_name, 'fuck_type') == False:
-            initialization(initialization_name,'fuck_type')
-    else:
-        initialization('klt','all')
-
-    ##检查吉祥物选项
-    if config.has_section('Mascot') == True:
-        initialization_name = 'Mascot'
-        if config.has_option(initialization_name,'poke_type') == False:
-            initialization(initialization_name,'poke_type')
-    else:
-        initialization('Mascot','all')
-
-    if config.has_section('main') == True:
-        initialization_name = 'main'
-        if config.has_option(initialization_name,'host') == False:
-            initialization(initialization_name,'host')
-        if config.has_option(initialization_name, "port") == False:
-            initialization(initialization_name, "port")
-        if config.has_option(initialization_name, "debug") == False:
-            initialization(initialization_name, "debug")
-    else:
-        initialization('main','all')
-    
-    if config.has_section('request') == True:
-        initialization_name = 'request'
-        if config.has_option(initialization_name, 'request-host') == False:
-            initialization(initialization_name,'request-host')
-        if config.has_option(initialization_name,'request-post') == False:
-            initialization(initialization_name,'request-post')
-    else:
-        initialization('request','all')
-    
-    if config.has_section('Function') == True:
-        initialization_name = 'Function'
-        if config.has_option(initialization_name, 'jrrp') == False:
-            initialization(initialization_name,'jrrp')
-    else:
-        initialization('Function','all')

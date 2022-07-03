@@ -18,7 +18,6 @@ def group(msg,uid,gid):
         msglog = pd.concat([msglog,tmpfm],ignore_index=True)
     else:
          msglog = tmpfm
-    print(msglog)
     msglog = msglog.reindex_like(msglog)
     msglog.to_csv(file_path,index=None)
 
@@ -38,6 +37,5 @@ def private(msg,uid):
         msglog = pd.concat([msglog,tmpfm],ignore_index=True)
     else:
          msglog = tmpfm
-    print(msglog)
     msglog = msglog.reindex_like(msglog)
     msglog.to_csv(file_path,index=None)

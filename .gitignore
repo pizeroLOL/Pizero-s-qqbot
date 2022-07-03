@@ -8,3 +8,4 @@ Scripts
 pyvenv.cfg
 __pycache__
 msglog
+ini.py
