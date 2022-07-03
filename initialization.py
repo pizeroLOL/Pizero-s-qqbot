@@ -7,54 +7,53 @@ default_qq='123456789'
 default_type = 'True'
 
 def initialization(section,option): # 初始化
-    if section == 'uid':
-        if option == 'Mascot_id':
-            config['uid']['Mascot_id'] = default_qq
-        elif option == 'admin_id':
-            config['uid']['admin_id'] = default_qq
-        elif option == 'robot_id':
-            config['uid']['robot_id'] = default_qq
-        elif option == 'all':
-            config['uid'] = {'Mascot_id':default_qq,
-                             'admin_id':default_qq,
-                             'robot_id':default_qq}
-    elif section == 'klt':
-        if option == 'uid':
-            config['klt']['uid'] = default_qq
-        elif option == 'fuck_type':
-            config['klt']['fuck_type'] = default_type
-        elif option == 'all':
-            config['klt'] = {'uid':default_qq,
-                             'fuck_type':default_type}
-    elif section == 'Mascot':
-        if option == 'poke':
-            config['Mascot']['poke_type'] = default_type
-        elif option == 'all':
-            config['Mascot']={'poke_type':default_type}
-    elif section == 'main':
-        if option == 'host':
-            config['main']['host'] = '127.0.0.1'
-        elif option == 'port':
-            config["main"]["port"] = '20301'
-        elif option == 'debug':
-            config["main"]["debug"] = default_type
-        elif option == 'all':
-            config['main'] = {'host':'127.0.0.1',
-                              'port':'20301',
-                              'debug':default_type}
-    elif section == 'request':
-        if option == 'request-host':
-            config['request']['request-host'] = '127.0.0.1'
-        elif option == 'request-post':
-            config["request"]['request-post'] = '20300'
-        elif option == 'all':
-            config["request"] = {'request-host':'127.0.0.1',
+    if section == 'uid' and option == 'Mascot_id':
+        config['uid']['Mascot_id'] = default_qq
+    elif section == 'uid' and option == 'admin_id':
+        config['uid']['admin_id'] = default_qq
+    elif section == 'uid' and option == 'robot_id':
+        config['uid']['robot_id'] = default_qq
+    elif section == 'uid' and option == 'all':
+        config['uid'] = {'Mascot_id':default_qq,
+                         'admin_id':default_qq,
+                         'robot_id':default_qq}
+
+    elif section == 'klt' and  option == 'uid':
+        config['klt']['uid'] = default_qq
+    elif section == 'klt' and option == 'fuck_type':
+        config['klt']['fuck_type'] = default_type
+    elif section == 'klt' and option == 'all':
+        config['klt'] = {'uid':default_qq,
+                         'fuck_type':default_type}
+
+    elif section == 'Mascot' and option == 'poke':
+        config['Mascot']['poke_type'] = default_type
+    elif section == 'Mascot' and option == 'all':
+        config['Mascot']={'poke_type':default_type}
+            
+    elif section == 'main' and option == 'host':
+        config['main']['host'] = '127.0.0.1'
+    elif section == 'main' and option == 'port':
+        config["main"]["port"] = '20301'
+    elif section == 'main' and option == 'debug':
+        config["main"]["debug"] = default_type
+    elif section == 'main' and option == 'all':
+        config['main'] = {'host':'127.0.0.1',
+                          'port':'20301',
+                          'debug':default_type}
+    
+    elif section == 'request' and option == 'request-host':
+        config['request']['request-host'] = '127.0.0.1'
+    elif section == 'request' and option == 'request-post':
+        config["request"]['request-post'] = '20300'
+    elif section == 'request' and option == 'all':
+        config["request"] = {'request-host':'127.0.0.1',
                                  'request-post':'20300'}
-    elif section == 'Function':
-        if option == 'jrrp':
-            config['Function']['jrrp'] = default_type
-        elif option == 'all':
-            config['Function'] = {'jrrp':default_type}
+        
+    elif section == 'Function' and option == 'jrrp':
+        config['Function']['jrrp'] = default_type
+    elif section == 'Function' and option == 'all':
+        config['Function'] = {'jrrp':default_type}
 
     with open('app-config.cfg','w') as configfile:
         config.write(configfile)

@@ -65,28 +65,6 @@ def keyword(message,uid,gid = None):
     elif message[0: 5] == '#poke' or message[0:2] == '#戳' or message[0:4] == '#戳一戳' :
         return others_poke(message,uid,gid)
 
-### 屏蔽词相关
-    # elif message[0:7] == '!addpbc':
-    #     pbc = message[8:]
-    #     return addpbc(pbc,uid,gid)
-    # elif message[0:6] == '！添加屏蔽词':
-    #     pbc = message[7:]
-    #     return addpbc(pbc,uid,gid)
-    # elif message[0:6] == '!dlpbc' or message[0:6] == '！删除屏蔽词':
-    #     pbc = message[7:]
-    #     return dlpbc(pbc,uid,gid)
-
-    # elif message[0:9] == '!addadmin':
-    #     doadmin = 'admin'+str(gid)+str(message[10:])
-    #     return addadmin(doadmin,uid,gid)
-    # elif message[0:6] == '！添加管理员':
-    #     doadmin = 'admin'+str(gid)+str(message[7:])
-    #     return addadmin(doadmin,uid,gid)
-
-    # elif message[0:8] == '!dladmin':
-    #     doadmin = 'admin'+str(gid)+str(message[9:])
-    #     #return dladmin(doadmin,uid,gid)
-
 
 ## 应用模块例子
 #def xxxxx(xxx,xxx,xxx):  
@@ -122,66 +100,3 @@ def others_poke(message,uid,gid):
     elif message[0:4] == '#戳一戳' :
         uid = message[4:]
     GoCqhttpApi.poke(uid,gid)
-
-### 屏蔽词相关
-# def addpbc(pbc,uid,gid):
-#     doadmin = 'admin'+str(gid)+str(uid)
-#     config.read('pbc.ini')
-#     if str(uid) == admin or config.has_option(str(gid),doadmin) == True :
-#         if gid != None:
-#             if pbc == '!addpbc' or pbc == '!dlpbc' or pbc == '！添加屏蔽词' or '！删除屏蔽词' or pbc== 'admin':
-#                 msg='你想写出bug直说，我来给你写'
-#                 sendmsg(msg,gid)
-#             else:
-#                 if config.has_section(str(gid)) == False:
-#                     config[str(gid)]={'12154152151221111684215231521511111':'0'}
-#                     with open('pbc.ini','w') as configfile:
-#                         config.write(configfile)
-#                 config[str(gid)][str(pbc)]='1'
-#                 with open('pbc.ini','w') as configfile:
-#                     config.write(configfile)
-#                 msg = '已添加屏蔽词'
-#                 sendmsg(msg,gid)
-#     else:
-#         msgs = '你没有管理员权限'
-#         sendmsg(msg,gid)
-
-# def dlpbc(pbc,uid,gid):
-#     config.read('pbc.ini')
-#     doadmin = 'admin'+str(gid)+str(uid)
-#     if str(uid) == '2774737215' or config.has_option(str(gid),doadmin) == True :
-#         if gid != None:
-#             config.read('pbc.ini')
-#             if config.has_option(str(gid),str(pbc)) == True:
-#                 config.remove_option(str(uid),str(pbc))
-#                 with open('pbc.ini','w') as configfile:
-#                     config.write(configfile)
-#             msg = '已移除屏蔽词'
-#             sendmsg(msg,gid)
-#         else:
-#             msg = '你没有管理员权限'
-#             sendmsg(msg,gid)
-
-
-# def addadmin(doadmin,uid,gid):
-#     config.read('pbc.ini')
-#     user = 'admin'+str(gid)+str(uid)
-#     if gid != None:
-#         if str(uid) == '2774737215' or config.has_option(str(gid),user) == True :
-#             config.read('pbc.ini')
-#             if config.has_section(gid)==False:
-#                 config[gid]={'1':'1'}
-#                 with open('pbc.ini','w') as configfile:
-#                     config.write(configfile)
-#             if config.has_option(str(gid),doadmin) ==False:
-#                 config[str(gid)][str(uid)]=1
-#                 with open('pbc.ini','w') as configfile:
-#                     config.write(configfile)
-#                 msg = '该群管理员已创建'
-#                 sendmsg(msg,gid)
-#             else:
-#                 msg = '该群管理员已经创建'
-#                 sendmsg(msg,gid)
-#         else:
-#             msg = '你没有管理员权限'
-#             sendmsg(msg,gid)
