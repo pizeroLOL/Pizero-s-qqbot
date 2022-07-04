@@ -9,18 +9,14 @@ uid_topsecret = config['uid']
 Mascot_id = str(uid_topsecret['Mascot_id'])
 admin_id = str(uid_topsecret['admin_id'])
 robot_id = str(uid_topsecret['robot_id'])
+klt_id = str(uid_topsecret['klt_id'])
+look_for_group_id = str(uid_topsecret['look_for_group_id'])
 at_robot = '[CQ:at,qq='+robot_id+']'
 
-## klt表
-klt_topsecret = config['klt']
-klt_id = str(klt_topsecret['uid'])
-fuck_type = klt_topsecret.getboolean('fuck_type')
-
-# 吉祥物表
-Mascot_topsecret = config['Mascot']
-poke_type = Mascot_topsecret.getboolean('poke_type')
-
 # Function表
+Function_topsecret = config['Function']
+fuck_type = Function_topsecret.getboolean('fuck_type')
+poke_type = Function_topsecret.getboolean('poke_type')
 
 def keyword(message,uid,gid = None):
     uid=str(uid)

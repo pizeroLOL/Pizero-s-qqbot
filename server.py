@@ -6,6 +6,7 @@ config.read('app-config.cfg')
 
 initialization.check()
 main_topsecret = config['main']
+Function_topsecret = config['Function']
 
 app = Flask(__name__)
 
@@ -27,4 +28,4 @@ def return_app():
     return 'OK'
 
 if __name__ == '__main__':
-    app.run(debug=main_topsecret.getboolean('debug'), host=main_topsecret['host'], port=main_topsecret["port"])
+    app.run(debug=Function_topsecret.getboolean('debug'), host=main_topsecret['host'], port=main_topsecret["port"])
