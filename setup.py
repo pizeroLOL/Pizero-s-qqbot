@@ -1,2 +1,0 @@
-import initialization
-initialization.check()
