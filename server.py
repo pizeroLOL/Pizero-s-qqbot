@@ -1,5 +1,5 @@
 from flask import Flask, request
-import QQbotApp,configparser,GoCqhttpApi,jrrp,time,os
+import configparser,GoCqhttpApi,jrrp,time,os
 import pandas as pd
 
 # 导入配置文件
