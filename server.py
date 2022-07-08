@@ -7,7 +7,7 @@ config = configparser.ConfigParser()
 config.read('app-config.cfg')
 
 # 检查
-check()
+check.check()
 
 # 参数导入
 ## uid表
