@@ -6,15 +6,14 @@ import pandas as pd
 config = configparser.ConfigParser()
 config.read('app-config.cfg')
 
-# 默认初始化变量
-default_qq='123456789'
-default_type = 'True'
-default_host = '127.0.0.1'
-configlist = ['Function','id','main','request']
-
 def check():
     '''初始化
     默认变量在第三行，变量名为configlist，包含Function、id、main、request'''
+    # 默认初始化变量
+    default_qq='123456789'
+    default_type = 'True'
+    default_host = '127.0.0.1'
+    configlist = ['Function','id','main','request']
     for i in configlist:
         '''i为上方的configlist'''
         if i == 'Function':
@@ -46,7 +45,6 @@ def check():
 
 # 删除初始化变量并作检查
 check()
-del default_qq,default_type,default_host,configlist
 
 # 参数导入
 ## uid表
