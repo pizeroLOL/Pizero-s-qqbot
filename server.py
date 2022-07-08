@@ -10,12 +10,13 @@ config.read('app-config.cfg')
 default_qq='123456789'
 default_type = 'True'
 default_host = '127.0.0.1'
-
 configlist = ['Function','id','main','request']
 
 def check():
-    #初始化
+    '''初始化
+    默认变量在第三行，变量名为configlist，包含Function、id、main、request'''
     for i in configlist:
+        '''i为上方的configlist'''
         if i == 'Function':
             lib = ['jrrp','look_for_group_type','fuck_type','poke_type','debug']
         elif i == 'id':
@@ -25,11 +26,12 @@ def check():
         elif i == 'request':
             lib = ['request-host','request-post']
 
-        if config.has_section(i) == False:
+        if config.has_section(i) == False: #检测是否有当前表
             config.add_section(i)
         for n in lib:
+            '''n为上方lib变量'''
             if config.has_option(i, n) == False and i == 'Function':
-                config[i][n] = default_type
+                config[i][n] = default_type 
             elif config.has_option(i,n) == False and i == 'id':
                 config[i][n] = default_qq
             elif config.has_option(i, n) == False and 'host' in n:
@@ -48,25 +50,30 @@ del default_qq,default_type,default_host,configlist
 
 # 参数导入
 ## uid表
-uid_topsecret = config['id']
-Mascot_id = str(uid_topsecret['Mascot_id'])
-admin_id = str(uid_topsecret['admin_id'])
-robot_id = str(uid_topsecret['robot_id'])
-klt_id = str(uid_topsecret['klt_id'])
-look_for_group_id = str(uid_topsecret['look_for_group_id'])
+id_topsecret = config['id']
+Mascot_id = str(id_topsecret['Mascot_id'])
+admin_id = str(id_topsecret['admin_id'])
+robot_id = str(id_topsecret['robot_id'])
+klt_id = str(id_topsecret['klt_id'])
+look_for_group_id = str(id_topsecret['look_for_group_id'])
 at_robot = '[CQ:at,qq='+robot_id+']'
 
 # Function表
 Function_topsecret = config['Function']
+server_debug_type = Function_topsecret.getboolean('debug')
 fuck_type = Function_topsecret.getboolean('fuck_type')
 poke_type = Function_topsecret.getboolean('poke_type')
+
+# main表
+main_topsecret = config['main']
+server_host = main_topsecret['host']
+server_post = main_topsecret["port"]
+
+del id_topsecret,Function_topsecret,main_topsecret
 
 # 其他全局变量
 diff_time = None
 msg_step = 0
-
-# main表
-main_topsecret = config['main']
 
 def keyword(message,uid,gid = None):
     global diff_time,msg_step
@@ -163,45 +170,47 @@ def tell_admin(admin_id,uid,gid):
 
 
 # 记录信息发送
+'''
 def group(msg,uid,gid):
+    gid = str(gid)
     timeis = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    # columns = ['msg','uid','gid']
-    file_path = './msglog/msglog-group'+time.strftime("%Y-%m-%d", time.localtime())+'.csv'
+    file_path = './msglog/'+'gid-'+gid+'/'+time.strftime("%Y-%m", time.localtime())+'.csv'
     tmpfm = pd.DataFrame({
         'message':[msg],
         'time':[timeis],
         'uid':[uid],
         'gid':[gid]
     })
-    if os.path.exists('./msglog') == False:
-        os.mkdir('msglog')
+    if os.path.exists('./msglog/gid-'+gid) == False:
+        os.makedirs('msglog/gid-'+gid)
     if os.path.isfile(file_path) == True:
         msglog = pd.read_csv(file_path)
         msglog = pd.concat([msglog,tmpfm],ignore_index=True)
     else:
          msglog = tmpfm
     msglog = msglog.reindex_like(msglog)
-    msglog.to_csv(file_path,index=None)
+    msglog.to_csv(file_path,index=None,mode='a')
 
 def private(msg,uid):
+    uid = str(uid)
     timeis = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     # columns = ['msg','uid','gid']
-    file_path = './msglog/msglog-private'+time.strftime("%Y-%m-%d", time.localtime())+'.csv'
+    file_path = './msglog/uid-'+uid+'/'+time.strftime("%Y-%m", time.localtime())+'.csv'
     tmpfm = pd.DataFrame({
         'message':[msg],
         'time':[timeis],
         'uid':[uid]
     })
-    if os.path.exists('./msglog') == False:
-        os.mkdir('msglog')
+    if os.path.exists('./msglog/uid-'+uid) == False:
+        os.makedirs('msglog/uid-'+uid)
     if os.path.isfile(file_path) == True:
         msglog = pd.read_csv(file_path)
         msglog = pd.concat([msglog,tmpfm],ignore_index=True)
     else:
          msglog = tmpfm
     msglog = msglog.reindex_like(msglog)
-    msglog.to_csv(file_path,index=None)
-
+    msglog.to_csv(file_path,index=None, header=False,mode='a')
+'''
 
 # 服务端本体
 app = Flask(__name__)
@@ -213,14 +222,14 @@ def return_app():
         uid = request.get_json().get('sender').get('user_id') # 获取信息发送者的 QQ号码
         message = request.get_json().get('raw_message') # 获取原始信息
         keyword(message, uid) # 将 Q号和原始信息传到我们的后台
-        private(message,uid)
+        #private(message,uid)
     if request.get_json().get('message_type') == 'group':# 如果是群聊信息
         gid = request.get_json().get('group_id') # 获取群号
         uid = request.get_json().get('sender').get('user_id') # 获取信息发送者的 QQ号码
         message = request.get_json().get('raw_message') # 获取原始信息
         keyword(message, uid, gid) # 将 Q号和原始信息传到我们的后台
-        group(message,uid,gid)
+        #group(message,uid,gid)
     return 'OK'
 
 if __name__ == '__main__':
-    app.run(debug=Function_topsecret.getboolean('debug'), host=main_topsecret['host'], port=main_topsecret["port"])
+    app.run(debug=server_debug_type, host=server_host, port=server_post)
