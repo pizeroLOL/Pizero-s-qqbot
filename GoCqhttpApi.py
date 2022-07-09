@@ -8,17 +8,20 @@ host = str(uid_topsecret['request-host'])
 post = str(uid_topsecret['request-post'])
 
 def sendmsg(msg,uid,gid = None):
+    '''发送消息，当gid为空时发送私聊消息'''
     if gid != None:
         requests.get('http://{0}:{1}/send_group_msg?group_id={2}&message={3}'.format(host,post,gid,msg))
     else :
         requests.get('http://{0}:{1}/send_private_msg?user_id={0}&message={1}'.format(host,post,uid,msg))
 
 def poke(uid,gid = None):  #戳一戳
+    '''戳一戳，uid为被戳的人，当gid为空时发送私聊戳一戳'''
     msg='[CQ:poke,qq='+uid+']'
     sendmsg(msg,uid,gid)
 # [CQ:poke,qq=<qq号>] 戳一戳的cq代码
 
 def songs(message,uid,gid = None):
+    '''点歌，检测前二到五位是否是指定字符串，空一格后面数字是song id'''
     if message[:2] == 'QQ' or message[:2] == 'qq':
         song_id = message[3:]
         song_type = 'qq'
@@ -35,13 +38,3 @@ def songs(message,uid,gid = None):
     sendmsg(msg,uid,gid)
 
 ## [CQ:music,type=源,id=音乐id]
-
-
-
-
-
-
-
-
-
-

@@ -24,6 +24,8 @@ Function_topsecret = config['Function']
 server_debug_type = Function_topsecret.getboolean('debug')
 fuck_type = Function_topsecret.getboolean('fuck_type')
 poke_type = Function_topsecret.getboolean('poke_type')
+msglog_private_type = Function_topsecret.getboolean('msglog_private_type')
+msglog_group_type =  Function_topsecret.getboolean('msglog_group_type')
 
 # main表
 main_topsecret = config['main']
@@ -37,6 +39,7 @@ diff_time = None
 msg_step = 0
 
 def keyword(message,uid,gid = None):
+    '''中转，将各个的应用转到对应的模块'''
     global diff_time,msg_step
     uid=str(uid)
     if gid != None:
@@ -113,7 +116,7 @@ def helps(uid,gid = None): #帮助
         GoCqhttpApi.sendmsg(poke_yes,uid,gid)
 
 def good_night(uid,gid = None):  
-    msg='晚安'
+    msg='晚安~'
     GoCqhttpApi.sendmsg(msg,uid,gid)
 
 def others_poke(message,uid,gid):
@@ -131,7 +134,6 @@ def tell_admin(admin_id,uid,gid):
 
 
 # 记录信息发送
-'''
 def group(msg,uid,gid):
     gid = str(gid)
     timeis = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -144,13 +146,10 @@ def group(msg,uid,gid):
     })
     if os.path.exists('./msglog/gid-'+gid) == False:
         os.makedirs('msglog/gid-'+gid)
-    if os.path.isfile(file_path) == True:
-        msglog = pd.read_csv(file_path)
-        msglog = pd.concat([msglog,tmpfm],ignore_index=True)
-    else:
-         msglog = tmpfm
-    msglog = msglog.reindex_like(msglog)
-    msglog.to_csv(file_path,index=None,mode='a')
+    if os.path.isfile(file_path) == True and msglog_group_type == True:
+        tmpfm.to_csv(file_path,index=None,header=False,mode='a')
+    elif os.path.isfile(file_path) == False and msglog_group_type == True:
+        tmpfm.to_csv(file_path,index=None,mode='w')
 
 def private(msg,uid):
     uid = str(uid)
@@ -164,14 +163,10 @@ def private(msg,uid):
     })
     if os.path.exists('./msglog/uid-'+uid) == False:
         os.makedirs('msglog/uid-'+uid)
-    if os.path.isfile(file_path) == True:
-        msglog = pd.read_csv(file_path)
-        msglog = pd.concat([msglog,tmpfm],ignore_index=True)
-    else:
-         msglog = tmpfm
-    msglog = msglog.reindex_like(msglog)
-    msglog.to_csv(file_path,index=None, header=False,mode='a')
-'''
+    if os.path.isfile(file_path) == True and msglog_private_type == True:
+        tmpfm.to_csv(file_path,index=None,header=False,mode='a')
+    elif os.path.isfile(file_path) == False and msglog_private_type == True:
+        tmpfm.to_csv(file_path,index=None,mode='w')
 
 # 服务端本体
 app = Flask(__name__)
@@ -183,13 +178,13 @@ def return_app():
         uid = request.get_json().get('sender').get('user_id') # 获取信息发送者的 QQ号码
         message = request.get_json().get('raw_message') # 获取原始信息
         keyword(message, uid) # 将 Q号和原始信息传到我们的后台
-        #private(message,uid)
+        private(message,uid)
     if request.get_json().get('message_type') == 'group':# 如果是群聊信息
         gid = request.get_json().get('group_id') # 获取群号
         uid = request.get_json().get('sender').get('user_id') # 获取信息发送者的 QQ号码
         message = request.get_json().get('raw_message') # 获取原始信息
         keyword(message, uid, gid) # 将 Q号和原始信息传到我们的后台
-        #group(message,uid,gid)
+        group(message,uid,gid)
     return 'OK'
 
 if __name__ == '__main__':

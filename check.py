@@ -1,11 +1,12 @@
 import configparser
 def check():
+    '''检查配置文件'''
     # 导入配置文件
     config = configparser.ConfigParser()
     config.read('app-config.cfg')
 
     '''初始化
-    默认变量在第三行，变量名为configlist，包含Function、id、main、request'''
+    默认变量在第十行，变量名为configlist，包含Function、id、main、request'''
     # 默认初始化变量
     default_qq='123456789'
     default_type = 'True'
@@ -14,7 +15,7 @@ def check():
     for i in configlist:
         '''i为上方的configlist'''
         if i == 'Function':
-            lib = ['jrrp','look_for_group_type','fuck_type','poke_type','debug']
+            lib = ['jrrp','look_for_group_type','fuck_type','poke_type','debug','msglog_private_type','msglog_group_type']
         elif i == 'id':
             lib = ['Mascot_id','admin_id','robot_id','klt_id','look_for_group_id']
         elif i == 'main':
