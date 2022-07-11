@@ -1,4 +1,4 @@
-import configparser
+import configparser,pandas as pd,os
 def check():
     '''检查配置文件'''
     # 导入配置文件
@@ -37,7 +37,16 @@ def check():
                 config[i][n] = '20301'
             elif config.has_option(i, n) == False and n == 'request-post':
                 config[i][n] = '20300'
-
+    '''保存为app-config.cfg'''
     with open('app-config.cfg','w') as configfile:
         config.write(configfile)
+    '''QAs'''
+    file_path = './QAs.csv'
+    if os.path.isfile(file_path) == False:
+        tmpfm = pd.DataFrame({
+            'Q':['晚安'],
+            'A':['晚安~']
+        })
+        tmpfm.to_csv(file_path,index=None,mode='w',encoding='utf8')
+
 check()

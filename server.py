@@ -32,6 +32,10 @@ main_topsecret = config['main']
 server_host = main_topsecret['host']
 server_post = main_topsecret["port"]
 
+# 导入QAs
+QAs = pd.read_csv('./QAs.csv',encoding='utf8')
+
+#删除多余变量
 del id_topsecret,Function_topsecret,main_topsecret
 
 # 其他全局变量
@@ -40,11 +44,12 @@ msg_step = 0
 
 def keyword(message,uid,gid = None):
     '''中转，将各个的应用转到对应的模块'''
+    #初始化
     global diff_time,msg_step
     uid=str(uid)
     if gid != None:
         gid=str(gid)
-
+    #发言频率检测
     if time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) != diff_time and gid == look_for_group_id:
         diff_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         msg_step = msg_step + 1
@@ -67,8 +72,8 @@ def keyword(message,uid,gid = None):
         message = message[4:]
         return GoCqhttpApi.songs(message,uid,gid)
 
-    elif message[0:2] == '晚安':
-        return good_night(uid,gid)
+    # elif message[0:2] == '晚安':
+    #     return good_night(uid,gid)
 
     elif message[0:5] == '#人品查询' or message[0:5] == '#rpcx' or message[0:5] == '#人品査詢':
         if len(message) > 8 :
@@ -91,6 +96,15 @@ def keyword(message,uid,gid = None):
         
     elif message[0: 5] == '#poke' or message[0:2] == '#戳' or message[0:4] == '#戳一戳' :
         return others_poke(message,uid,gid)
+    # 自定义QAs
+    # 待补充
+    elif message[:2] == 'Q:' or message[:2] == 'Q：' and QAs['Q'].str.contains(message[2:]) == True:
+        print(QAs)
+        date = QAs.loc[QAs['Q'].str.contains(message[2:])]
+        print(date)
+        msg = date.iloc[0,1]
+        print(msg)
+        GoCqhttpApi.sendmsg(msg,uid,gid)
 
 
 ## 应用模块例子
