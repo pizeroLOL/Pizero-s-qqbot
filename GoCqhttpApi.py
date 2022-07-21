@@ -1,4 +1,4 @@
-import requests,configparser
+import requests,configparser,time
 
 config = configparser.ConfigParser()
 config.read('app-config.cfg')
@@ -7,8 +7,22 @@ uid_topsecret = config['request']
 host = str(uid_topsecret['request-host'])
 post = str(uid_topsecret['request-post'])
 
+global_uid = None
+msg_step = 0
+
 def sendmsg(msg,uid,gid = None):
     '''发送消息，当gid为空时发送私聊消息'''
+    '''刹车'''
+    if time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) != diff_time and gid == global_uid:
+        diff_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        msg_step = msg_step + 1
+    else:
+        msg_step = 0
+        global_uid = uid
+    if msg_step == 2:
+        time.sleep(1)
+        return sendmsg('触发频率过高请再发一次')
+    '''正常发送流程'''
     if gid != None:
         requests.get('http://{0}:{1}/send_group_msg?group_id={2}&message={3}'.format(host,post,gid,msg))
     else :

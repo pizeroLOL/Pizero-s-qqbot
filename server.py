@@ -60,13 +60,13 @@ def keyword(message,uid,gid = None):
     for func in solve_list:
         func(message,uid,gid)
     #发言频率检测
-    if time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) != diff_time and gid == look_for_group_id:
-        diff_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        msg_step = msg_step + 1
-    else:
-        msg_step = 0
-    if msg_step == 2:
-        return tell_admin(admin_id,uid,gid)
+    # if time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) != diff_time :
+    #     diff_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    #     msg_step = msg_step + 1
+    # else:
+    #     msg_step = 0
+    # if msg_step == 2:
+    #     return tell_admin(admin_id,uid,gid)
 
 def helps(message,uid,gid = None): 
     '''帮助'''
@@ -143,6 +143,9 @@ def QAs_Q(message,uid,gid = None):
     elif message[:5] == '#全部问题':
         GoCqhttpApi.sendmsg(Q_all,uid,gid)
 
+# def QQ(message,uid,gid):
+#     if message == '?':
+#         GoCqhttpApi.sendmsg('?',uid,gid)
 
 ## 应用模块例子
 #def xxxxx(xxx,xxx,xxx):  
