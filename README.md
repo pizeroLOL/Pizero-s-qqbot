@@ -6,10 +6,6 @@ github只做action编译和做镜像使用，请在[gitee](https://gitee.com/piz
 ## 开发代办
 1. - [x] 制作基于flask的服务端
 2. - [x] 添加初始化
-      - [x] robot_id、admin_id、Mascot_id
-      - [x] klt_id、klt_id_default
-      - [x] poke_Mascot、 poke_Mascot_default
-      - [x] 测试可用
 3. - [x] 将api.py只封装go-cqhttp的api和cq码，并将应用迁移到app，并改名为GoCqhttpApi
 4. - [ ] 将由configparser管理的今日人品模块迁移到pandas
 5. - [ ] 屏蔽词 (pandas、configparser)
@@ -19,11 +15,12 @@ github只做action编译和做镜像使用，请在[gitee](https://gitee.com/piz
       - [ ] 根据各群的config决定是否启用屏蔽词功能与屏蔽词管理员功能
 6. - [ ] 数据可视化 (jupyter+pandas实现)
       - [ ] 词频
-      - [ ] 每分钟消息发送数
+      - [x] 每分钟消息发送数
       - [ ] “今日人品” 每人“人品”趋势
       - [ ] 功能调用次数
       - [ ] 活跃人数的活跃时间段
       - [ ] 讨论后统计发言频率
+      - [ ] 新增#top命令
 7. - [ ] 优化运行速度
       - [ ] 使用cython编译
       - [ ] 将大部分go-cqhttp的api转换为def
