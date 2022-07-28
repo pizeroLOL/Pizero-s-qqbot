@@ -48,7 +48,11 @@ github只做action编译和做镜像使用，请在[gitee](https://gitee.com/piz
 3. 基于songid的点歌 `#点歌 [QQ|qq|qqyy|qq音乐|QQ音乐|wyyyy|网易云音乐|wy|网易] <songid>`
 4. 让机器人戳你不方便戳的人 `#[poke|戳一戳|戳] <QQ号>`
 5. 自定义问答 `[Q:|Q：] <问题>` 配置见下方
-6. 其余见 `#[help|帮助]`
+6. 数据可视化
+   - top20 `#top20` （群内单月发消息榜单）
+   - 活跃时间 `#活跃时间`
+   - 该功能需开启*msglog_group_type*和*msglog_private_type*
+7. 其余见 `#[help|帮助]`
 
 ## 使用方式
 
