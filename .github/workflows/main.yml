@@ -36,7 +36,7 @@ jobs:
       - name: Installing dependencies
         run: |
           python -m venv apps
-          ./apps/bin/activate
+          ./apps/Scripts/Activate.ps1
           pip install -r requirePackage.txt
           pip install pyinstaller
           pyinstaller ./bot.py -F
@@ -57,6 +57,7 @@ jobs:
       - name: Installing dependencies
         run: |
           python -m venv apps
+          chmod +x activate
           apps/bin/activate
           pip install -r requirePackage.txt
           pip install pyinstaller
