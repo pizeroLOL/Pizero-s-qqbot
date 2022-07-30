@@ -2,6 +2,9 @@ name: build
 
 on: [ push , pull_request ]
 
+env:
+  COMMIT_ID: "${{ github.sha }}"
+
 jobs:
   build-linux:
     runs-on: ubuntu-latest
@@ -22,7 +25,7 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v3
         with: 
-          name: bot
+          name: bot-${COMMIT_ID::7}-${{ runner.os }}
           path: dist/*
   build-windows:
     runs-on: windows-latest
@@ -43,7 +46,7 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v3
         with: 
-          name: bot
+          name: bot-${COMMIT_ID::7}-${{ runner.os }}
           path: dist/*
   build-macos:
     runs-on: macos-latest
@@ -57,13 +60,13 @@ jobs:
       - name: Installing dependencies
         run: |
           python -m venv apps
-          chmod +x activate
-          apps/bin/activate
+          chmod +x ./apps/bin/activate
+          ./apps/bin/activate
           pip install -r requirePackage.txt
           pip install pyinstaller
           pyinstaller ./bot.py -F
       - name: upload
         uses: actions/upload-artifact@v3
         with: 
-          name: bot
+          name: bot-${COMMIT_ID::7}-${{ runner.os }}
           path: dist/*
