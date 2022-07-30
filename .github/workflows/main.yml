@@ -1,0 +1,20 @@
+name: build
+
+on: [ push , pull_request ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: setup Pyhon
+        uses: actions/setup-python@v4.1.0
+        with:
+          python-version: '3.10'
+          architecture: x64
+      - name: Installing dependencies
+        run: |
+          python -venv apps
+          source sample_app_venv/bin/activate
+          pip insatll -r requirePackage.txt
+          pip insatll pyinstaller
