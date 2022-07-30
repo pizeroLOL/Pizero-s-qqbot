@@ -11,10 +11,11 @@ post = str(uid_topsecret['request-post'])
 
 global_uid = None
 msg_step = 0
-
+istest = False
 
 def sendmsg(msg: str, uid: str | int, gid=None):
     '''发送消息，当gid为空时发送私聊消息'''
+    global istest
     '''初始化'''
     uid = str(uid)
     gid = str(gid)
@@ -29,12 +30,17 @@ def sendmsg(msg: str, uid: str | int, gid=None):
     #     time.sleep(1)
     #     return sendmsg('触发频率过高请再发一次')
     '''正常发送流程'''
-    if gid != None:
-        requests.get(
-            'http://{0}:{1}/send_group_msg?group_id={2}&message={3}'.format(host, post, gid, msg))
+    if istest == True:
+        uid = 'uid = '+uid
+        gid =  'gid = '+gid
+        print(msg+uid+gid)
     else:
-        requests.get(
-            'http://{0}:{1}/send_private_msg?user_id={0}&message={1}'.format(host, post, uid, msg))
+        if gid != None:
+            requests.get(
+                'http://{0}:{1}/send_group_msg?group_id={2}&message={3}'.format(host, post, gid, msg))
+        else:
+            requests.get(
+                'http://{0}:{1}/send_private_msg?user_id={0}&message={1}'.format(host, post, uid, msg))
 
 
 def poke(uid, gid=None):  # 戳一戳

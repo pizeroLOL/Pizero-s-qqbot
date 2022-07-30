@@ -63,7 +63,7 @@ def keyword(message, uid, gid=None):
         gid = str(gid)
     # 转发至模块
     message = message
-    solve_list = [helps, at_robot, to_jrrp,
+    solve_list = [at_robot, to_jrrp,
                   songs, Q_rp, eggs, pokepoke, DV, QAs_Q]
     for func in solve_list:
         func(message, uid, gid)
@@ -77,24 +77,24 @@ def keyword(message, uid, gid=None):
     #     return tell_admin(admin_id,uid,gid)
 
 
-def helps(message: str, uid: str | int, gid=None):
-    '''帮助'''
-    if message[0:5] == '#help' or message[0:3] == '#帮助' or message[0:3] == '#幫助' or message[0:5] == '' or message[0:5] == '#使用說明':
-        next_len = '%0A'
-        msgs = ['输入%23help来获取本帮助'+next_len+'@QQ 机器人来通过戳一戳（双击头像的那种）来确认是否在线', '输入（jrrp）或者（今日人品）来获得今天的“人品”'+next_len+'输入（%23人品查询（空格）<查询uid>）来获取某人的“人品”', '输入（%23点歌）或者（%23點歌）来通过输入songid点歌'+next_len + '使用案例'+next_len +
-                '    %23点歌（空格）<QQ音乐/网易云音乐/qqyy/qq/wyyyy/wy>（空格）<歌曲id，怎么获取自己查>', '输入（晚安）时，机器人会返回一句晚安'+next_len + '输入（%23戳一戳）来让机器人双击不方便戳的人', '输入（Q:【问题】）获取在文档内的问腿'+next_len+'输入(%23全部问题)获取在文档内的全部问题']
-        for msg in msgs:
-            GoCqhttpApi.sendmsg(msg, uid, gid)
-            time.sleep(1)
-        if fuck_type == True:
-            msg = '输入（可乐兔三联）来让可乐兔再次快乐'
-            GoCqhttpApi.sendmsg(msg, uid, gid)
-        if poke_type == True:
-            msg = '输入（摸摸吉祥物）让吉祥物再次快乐'
-            GoCqhttpApi.sendmsg(msg, uid, gid)
-        if msglog_group_type == True or msglog_private_type == True:
-            msg = '输入（%23top20）获取当月发消息榜单top20。%0A输入（%23月发信息表）获取当月发消息的数量与人数的表。输入（%23活跃时间）获取活跃的时间与小时关系表。输入（#活跃时间散点）获取活跃时间散点'
-            GoCqhttpApi.sendmsg(msg, uid, gid)
+# def helps(message: str, uid: str | int, gid=None):
+#     '''帮助'''
+#     if message == '#help' or message == '#帮助' or message == '#幫助' or message == '#使用說明':
+#         next_len = '%0A'
+#         msgs = ['输入%23help来获取本帮助'+next_len+'@QQ 机器人来通过戳一戳（双击头像的那种）来确认是否在线', '输入（jrrp）或者（今日人品）来获得今天的“人品”'+next_len+'输入（%23人品查询（空格）<查询uid>）来获取某人的“人品”', '输入（%23点歌）或者（%23點歌）来通过输入songid点歌'+next_len + '使用案例'+next_len +
+#                 '    %23点歌（空格）<QQ音乐/网易云音乐/qqyy/qq/wyyyy/wy>（空格）<歌曲id，怎么获取自己查>', '输入（晚安）时，机器人会返回一句晚安'+next_len + '输入（%23戳一戳）来让机器人双击不方便戳的人', '输入（Q:【问题】）获取在文档内的问腿'+next_len+'输入(%23全部问题)获取在文档内的全部问题']
+#         for msg in msgs:
+#             GoCqhttpApi.sendmsg(msg, uid, gid)
+#             time.sleep(1)
+#         if fuck_type == True:
+#             msg = '输入（可乐兔三联）来让可乐兔再次快乐'
+#             GoCqhttpApi.sendmsg(msg, uid, gid)
+#         if poke_type == True:
+#             msg = '输入（摸摸吉祥物）让吉祥物再次快乐'
+#             GoCqhttpApi.sendmsg(msg, uid, gid)
+#         if msglog_group_type == True or msglog_private_type == True:
+#             msg = '输入（%23top20）获取当月发消息榜单top20。%0A输入（%23月发信息表）获取当月发消息的数量与人数的表。输入（%23活跃时间）获取活跃的时间与小时关系表。输入（#活跃时间散点）获取活跃时间散点'
+#             GoCqhttpApi.sendmsg(msg, uid, gid)
 
 
 def at_robot(message, uid, gid):
@@ -269,3 +269,6 @@ def return_app():
 
 if __name__ == '__main__':
     app.run(debug=server_debug_type, host=server_host, port=server_post)
+    # while True:
+    #     msg = input('> ')
+    #     keyword(msg,'2774737215','11111111111111')
