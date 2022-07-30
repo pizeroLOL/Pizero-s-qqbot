@@ -2,9 +2,6 @@ name: build
 
 on: [ push , pull_request ]
 
-env:
-  COMMIT_ID: "${{ github.sha }}"
-
 jobs:
   build-linux:
     runs-on: ubuntu-latest
@@ -25,7 +22,7 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v3
         with: 
-          name: bot-${COMMIT_ID::7}-${{ runner.os }}
+          name: bot-${{ github.sha }}-${{ runner.os }}
           path: dist/*
   build-windows:
     runs-on: windows-latest
@@ -46,7 +43,7 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v3
         with: 
-          name: bot-${COMMIT_ID::7}-${{ runner.os }}
+          name: bot-${{ github.sha }}-${{ runner.os }}
           path: dist/*
   build-macos:
     runs-on: macos-latest
@@ -68,5 +65,5 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v3
         with: 
-          name: bot-${COMMIT_ID::7}-${{ runner.os }}
+          name: bot-${{ github.sha }}-${{ runner.os }}
           path: dist/*
