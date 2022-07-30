@@ -16,8 +16,8 @@ jobs:
         run: |
           python -m venv apps
           apps/bin/activate
-          pip insatll -r requirePackage.txt
-          pip insatll pyinstaller
+          pip install -r requirePackage.txt
+          pip install pyinstaller
           pyinstaller ./bot.py -F
       - name: upload
         uses: actions/upload-artifact@v3
@@ -37,8 +37,8 @@ jobs:
         run: |
           python -m venv apps
           apps/bin/activate
-          pip insatll -r requirePackage.txt
-          pip insatll pyinstaller
+          pip install -r requirePackage.txt
+          pip install pyinstaller
           pyinstaller ./bot.py -F
       - name: upload
         uses: actions/upload-artifact@v3
@@ -58,8 +58,8 @@ jobs:
         run: |
           python -m venv apps
           apps/bin/activate
-          pip insatll -r requirePackage.txt
-          pip insatll pyinstaller
+          pip install -r requirePackage.txt
+          pip install pyinstaller
           pyinstaller ./bot.py -F
       - name: upload
         uses: actions/upload-artifact@v3
