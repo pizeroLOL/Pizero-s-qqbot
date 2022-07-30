@@ -14,8 +14,8 @@ jobs:
           architecture: x64
       - name: Installing dependencies
         run: |
-          python -venv apps
-          source sample_app_venv/bin/activate
+          python -m venv apps
+          apps/bin/activate
           pip insatll -r requirePackage.txt
           pip insatll pyinstaller
           pyinstaller ./bot.py -F
@@ -35,8 +35,8 @@ jobs:
           architecture: x64
       - name: Installing dependencies
         run: |
-          python -venv apps
-          source sample_app_venv/bin/activate
+          python -m venv apps
+          apps/bin/activate
           pip insatll -r requirePackage.txt
           pip insatll pyinstaller
           pyinstaller ./bot.py -F
@@ -56,8 +56,8 @@ jobs:
           architecture: x64
       - name: Installing dependencies
         run: |
-          python -venv apps
-          source sample_app_venv/bin/activate
+          python -m venv apps
+          apps/bin/activate
           pip insatll -r requirePackage.txt
           pip insatll pyinstaller
           pyinstaller ./bot.py -F
