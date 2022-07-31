@@ -52,18 +52,22 @@ def poke(uid, gid=None):  # 戳一戳
 
 def songs(message, uid, gid=None):
     '''点歌，检测前二到五位是否是指定字符串，空一格后面数字是song id'''
-    if message[:2] == 'QQ' or message[:2] == 'qq':
-        song_id = message[3:]
-        song_type = 'qq'
-    elif message[:4] == 'QQ音乐' or message[:4] == 'qq音乐' or message[:4] == 'qqyy' or message[:4] == 'QQ音樂' or message[:4] == 'qq音樂':
-        song_id = message[5:]
-        song_type = 'qq'
-    elif message[:5] == '网易云音乐' or message[:5] == 'wyyyy' or message[:5] == '網易雲音樂':
-        song_id = message[6:]
-        song_type = '163'
-    elif message[:2] == '网易' or message[:2] == 'wy' or message[:2] == '網易':
-        song_id = message[3:]
-        song_type = '163'
+    match message[:2]:
+        case 'qq'|'QQ':
+            if message[2:3] == ' ':
+                song_id = message[3:]
+            else:
+                song_id = message[5:]
+            song_type = 'qq'
+        case '网易'|'網易'|'wy':
+            if message[2:3] == ' ':
+                song_id = message[3:]
+            elif message[3:4] == ' ':
+                song_id = message[4:]
+            else:
+                song_id = message[6:]
+            song_type = '163'
+    
     msg = '[CQ:music,type='+song_type+',id='+song_id+']'
     sendmsg(msg, uid, gid)
 

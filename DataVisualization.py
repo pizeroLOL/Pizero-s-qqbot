@@ -88,7 +88,8 @@ def monthly_sendmsg_top20(uid: str | int, gid: str | int, msglog_path='./msglog'
         print('长度不符，请检查代码')
         GoCqhttpApi.sendmsg('长度不符，请检查代码', str(uid), str(gid))
     for x in range(len(tmp_fm2list_1)):
-        msg = msg + str(tmp_fm2list_1[x]) + '  ' + str(tmp_fm2list_2[x])+'%0A'
+        msg = msg + '%0A' + \
+            str(tmp_fm2list_1[x]) + '  ' + str(tmp_fm2list_2[x])
     GoCqhttpApi.sendmsg(msg, str(uid), str(gid))
     # print(msg)
 

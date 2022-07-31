@@ -43,7 +43,7 @@ QAs = pd.read_csv('./QAs.csv', encoding='utf8')
 QAs_list = list(QAs['Q'])
 
 for Q in QAs_list:
-    Q_all = Q + '\n'
+    Q_all = '%0A' + Q
 
 # 删除多余变量
 del id_topsecret, Function_topsecret, main_topsecret
@@ -64,7 +64,7 @@ def keyword(message, uid, gid=None):
     # 转发至模块
     message = message
     solve_list = [at_robot, to_jrrp,
-                  songs, Q_rp, eggs, pokepoke, DV, QAs_Q]
+                  songs, Q_rp, eggs, pokepoke, DV, QAs_Q, find_msg]
     for func in solve_list:
         func(message, uid, gid)
     # 发言频率检测
@@ -162,15 +162,52 @@ def DV(message, uid, gid):
 def QAs_Q(message, uid, gid=None):
     '''自定义QAs'''
     if message[:2] == 'Q:' or message[:2] == 'Q：' and QAs['Q'].str.contains(message[2:]) == True:
-        print(QAs)
         date = QAs.loc[QAs['Q'].str.contains(message[2:])]
-        print(date)
         msg = date.iloc[0, 1]
-        print(msg)
         GoCqhttpApi.sendmsg(msg, uid, gid)
     elif message[:5] == '#全部问题':
         GoCqhttpApi.sendmsg(Q_all, uid, gid)
 
+
+def find_msg(message, uid, gid=None):
+    '''消息查询'''
+    if message[:5] == '#消息查询':
+        finder = message[6:]
+        finding_msg(finder, uid, gid)
+    if message[:6] == '#fdmsg':
+        finder = message[7:]
+        finding_msg(finder, uid, gid)
+
+
+def finding_msg(finder, uid, gid):
+    uid = str(uid)
+    finder = str(finder)
+    if gid != None:
+        prefix = 'gid-'+gid
+    else:
+        prefix = 'uid-'+uid
+    csv_path = './msglog/'+prefix+'/' + \
+        time.strftime("%Y-%m", time.localtime())+'.csv'
+    try:
+        msgs = pd.read_csv(csv_path)
+    except FileNotFoundError as err:
+        GoCqhttpApi.sendmsg('无记录或未开启消息记录', uid, gid)
+    print(msgs)
+    print(msgs['message'])
+    tf_list = list(msgs.message.str.contains(finder))
+    if True in tf_list:
+        tf = True
+    else:
+        tf = False
+    if tf == True:
+        df = msgs.loc[msgs['message'].str.contains(finder, na=False)]
+        msglist = list(df['message'])
+        msg = '结果如下'
+        for i in msglist:
+            msg = msg + '%0A' + i
+        GoCqhttpApi.sendmsg(msg, uid, gid)
+    else:
+        GoCqhttpApi.sendmsg('无符合条件的消息', uid, gid)
 # def QQ(message,uid,gid):
 #     if message == '?':
 #         GoCqhttpApi.sendmsg('?',uid,gid)
@@ -199,7 +236,7 @@ def tell_admin(admin_id, uid, gid):
     msg = '[CQ:at,qq='+admin_id+'] 每秒发送超过3条信息，关注一下'
     GoCqhttpApi.sendmsg(msg, uid, gid)
 
-# def sand_top(uid,gid = None):
+# def send_top(uid,gid = None):
 #     if gid == None:
 
 
@@ -269,6 +306,3 @@ def return_app():
 
 if __name__ == '__main__':
     app.run(debug=server_debug_type, host=server_host, port=server_post)
-    # while True:
-    #     msg = input('> ')
-    #     keyword(msg,'2774737215','11111111111111')
