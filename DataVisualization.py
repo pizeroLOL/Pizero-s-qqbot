@@ -136,6 +136,7 @@ def active_time_scatter_map(uid: str | int, gid: str | int, msglog_path='./msglo
     msg_presecend = read_csv(uid, gid, msglog_path, 'msg_presecend')
     msg_presecend.plot.scatter(x='消息数', y='时间-小时与分钟')
     plt.savefig('活跃时间散点图')
+    prefix = 'file:///'
     if platform.system() != 'Windows':
         prefix = 'file://'
     paths = prefix + \
@@ -155,6 +156,7 @@ def send_information_number_every_hour_that_month(uid: str | int, gid: str | int
     # print(msg_prehours)
     msg_prehours.plot(x='小时', y='消息数')
     plt.savefig('每小时在线分布')
+    prefix = 'file:///'
     if platform.system() != 'Windows':
         prefix = 'file://'
     paths = prefix + \

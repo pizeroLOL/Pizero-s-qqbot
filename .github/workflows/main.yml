@@ -19,6 +19,14 @@ jobs:
           pip install -r requirePackage.txt
           pip install pyinstaller
           pyinstaller ./bot.py -F
+      - name: testing
+        run: |
+          mkdir test
+          cp ./dist/bot ./test
+          cd test
+          chmod +x ./bot
+          ./bot -a
+          cd ../
       - name: upload
         uses: actions/upload-artifact@v3
         with: 
@@ -40,6 +48,14 @@ jobs:
           pip install -r requirePackage.txt
           pip install pyinstaller
           pyinstaller ./bot.py -F
+      - name: testing
+        run: |
+          mkdir test
+          cp ./dist/bot ./test
+          cd test
+          chmod +x ./bot
+          ./bot -a
+          cd ../
       - name: upload
         uses: actions/upload-artifact@v3
         with: 
@@ -62,6 +78,14 @@ jobs:
           pip install -r requirePackage.txt
           pip install pyinstaller
           pyinstaller ./bot.py -F
+      - name: testing
+        run: |
+          mkdir test
+          cp ./dist/bot ./test
+          cd test
+          chmod +x ./bot
+          ./bot -a
+          cd ../
       - name: upload
         uses: actions/upload-artifact@v3
         with: 

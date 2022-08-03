@@ -30,7 +30,7 @@ def one_test():
     test('str')    
     print('\n\n\nfinished str\n\n\n')
 
-one_test()
-check.check()
-print('\n\n\ncheck!\n\n\n')
-one_test()
+def test_flow():
+    check.check()
+    print('\n\n\ncheck!\n\n\n')
+    one_test()
