@@ -4,6 +4,7 @@
 https://www.cnblogs.com/xiaoshun-mjj/p/14516964.html
 https://blog.csdn.net/liuyingying0418/article/details/100126348
 '''
+import platform
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -33,18 +34,22 @@ class PermissionError(BaseException):
 def read_csv(uid: str | int, gid: str | int, msglog_path: str, types: str):
     '''读取 csv'''
     global df, uid_step, msglog_paths
-    path = msglog_path + '/gid-' + \
-        str(gid)+'/'+time.strftime("%Y-%m", time.localtime())+'.csv'
+    if gid != None:
+        path = msglog_path + '/gid-' + \
+            str(gid)+'/'+time.strftime("%Y-%m", time.localtime())+'.csv'
+    else:
+        path = msglog_path + '/uid-'+str(uid)+'/'+time.strftime("%Y-%m", time.localtime())+'.csv'
     try:
         with open(path, 'r', encoding='utf-8') as csv:
             df = pd.read_csv(csv)
+        """时间格式转换"""
+        df['time'] = pd.to_datetime(df['time'], format='%Y-%m-%d %H:%M:%S')
+        # print(df)
+        return table_conversion(uid, gid,  types, msglog_path)
     except PermissionError as e:
-        print('无指定群号')
-        # GoCqhttpApi.sendmsg('无该群聊记录', uid, gid)
-    """时间格式转换"""
-    df['time'] = pd.to_datetime(df['time'], format='%Y-%m-%d %H:%M:%S')
-    # print(df)
-    return table_conversion(uid, gid,  types, msglog_path)
+        return GoCqhttpApi.sendmsg('无该群聊记录或填写错误', uid, gid)
+    # except FileNotFoundError as e:
+    #     return GoCqhttpApi.sendmsg('无聊天文件', uid, gid)
 
 
 def table_conversion(uid: str, gid: str, types: str, msglog_path='./msglog'):
@@ -80,6 +85,7 @@ def table_conversion(uid: str, gid: str, types: str, msglog_path='./msglog'):
 def monthly_sendmsg_top20(uid: str | int, gid: str | int, msglog_path='./msglog'):
     '''消息发送top20'''
     uid_top = read_csv(uid, gid, msglog_path, 'uid_top')
+    # try:
     tmp_fm = uid_top.head(20)
     tmp_fm2list_1 = list(tmp_fm['uid'])
     tmp_fm2list_2 = list(tmp_fm['次数'])
@@ -91,6 +97,8 @@ def monthly_sendmsg_top20(uid: str | int, gid: str | int, msglog_path='./msglog'
         msg = msg + '%0A' + \
             str(tmp_fm2list_1[x]) + '  ' + str(tmp_fm2list_2[x])
     GoCqhttpApi.sendmsg(msg, str(uid), str(gid))
+    # except AttributeError as e:
+    #     GoCqhttpApi.sendmsg('请检查msglog是否开启，如果没有，那么正常',uid,gid)
     # print(msg)
 
 
@@ -102,14 +110,20 @@ def nmsm(uid: str | int, gid: str | int, msglog_path='./msglog'):
 def the_number_of_units_in_the_month_of_the_month_sent_the_number_of_members(uid: str | int, gid: str | int, msglog_path='./msglog'):
     '''当月单位消息数发送成员数'''
     uid_step = read_csv(uid, gid, msglog_path, 'uid_step')
+    # try:
     plt.figure(figsize=(5, 3))
     plt.subplot(1, 1, 1)
     uid_step.plot.hist(bins=30, title='发送消息分布')
     plt.savefig('发送消息分布')
-    paths = 'file:///' + \
+    prefix = 'file:///'
+    if platform.system() != 'Windows':
+        prefix = 'file://'
+    paths = prefix + \
         os.path.split(os.path.realpath(sys.argv[0]))[0] + '\发送消息分布.png'
     # print(paths)
     GoCqhttpApi.image(uid, gid, paths)
+    # except AttributeError as e:
+    #     GoCqhttpApi.sendmsg('请检查msglog是否正常或是否开启')
 
 
 def atsm(uid: str | int, gid: str | int, msglog_path='./msglog'):
@@ -122,7 +136,9 @@ def active_time_scatter_map(uid: str | int, gid: str | int, msglog_path='./msglo
     msg_presecend = read_csv(uid, gid, msglog_path, 'msg_presecend')
     msg_presecend.plot.scatter(x='消息数', y='时间-小时与分钟')
     plt.savefig('活跃时间散点图')
-    paths = 'file:///' + \
+    if platform.system() != 'Windows':
+        prefix = 'file://'
+    paths = prefix + \
         os.path.split(os.path.realpath(sys.argv[0]))[0] + '\活跃时间散点图.png'
     # print(paths)
     GoCqhttpApi.image(uid, gid, paths)
@@ -139,7 +155,9 @@ def send_information_number_every_hour_that_month(uid: str | int, gid: str | int
     # print(msg_prehours)
     msg_prehours.plot(x='小时', y='消息数')
     plt.savefig('每小时在线分布')
-    paths = 'file:///' + \
+    if platform.system() != 'Windows':
+        prefix = 'file://'
+    paths = prefix + \
         os.path.split(os.path.realpath(sys.argv[0]))[0] + '\每小时在线分布.png'
     # print(paths)
     GoCqhttpApi.image(uid, gid, paths)
@@ -153,10 +171,3 @@ def send_information_number_every_hour_that_month(uid: str | int, gid: str | int
 #     lastest_msg.index=df['minute']
 
 # print(hour_tmp)
-
-
-# if __name__ == '__main__':
-#     monthly_sendmsg_top20(2774737215, 1004741240)
-#     nmsm(2774737215, 1004741240)
-#     atsm(2774737215, 1004741240)
-#     sinehtm(2774737215, 1004741240)

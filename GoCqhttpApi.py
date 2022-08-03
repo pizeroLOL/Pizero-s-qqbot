@@ -13,6 +13,12 @@ global_uid = None
 msg_step = 0
 istest = False
 
+
+def test():
+    global istest
+    istest = True
+
+
 def sendmsg(msg: str, uid: str | int, gid=None):
     '''发送消息，当gid为空时发送私聊消息'''
     global istest
@@ -32,7 +38,7 @@ def sendmsg(msg: str, uid: str | int, gid=None):
     '''正常发送流程'''
     if istest == True:
         uid = 'uid = '+uid
-        gid =  'gid = '+gid
+        gid = 'gid = '+gid
         print(msg+uid+gid)
     else:
         if gid != None:
@@ -53,13 +59,13 @@ def poke(uid, gid=None):  # 戳一戳
 def songs(message, uid, gid=None):
     '''点歌，检测前二到五位是否是指定字符串，空一格后面数字是song id'''
     match message[:2]:
-        case 'qq'|'QQ':
+        case 'qq' | 'QQ':
             if message[2:3] == ' ':
                 song_id = message[3:]
             else:
                 song_id = message[5:]
             song_type = 'qq'
-        case '网易'|'網易'|'wy':
+        case '网易' | '網易' | 'wy':
             if message[2:3] == ' ':
                 song_id = message[3:]
             elif message[3:4] == ' ':
@@ -67,16 +73,16 @@ def songs(message, uid, gid=None):
             else:
                 song_id = message[6:]
             song_type = '163'
-    
+
     msg = '[CQ:music,type='+song_type+',id='+song_id+']'
     sendmsg(msg, uid, gid)
 
 # [CQ:music,type=源,id=音乐id]
 
 
-def image(uid, gid = None, paths=None, url=None):
+def image(uid, gid=None, paths=None, url=None):
     if paths != None:
         msg = '[CQ:image,file=' + paths + ']'
     else:
         msg = '[CQ:image,url=' + url + ']'
-    sendmsg(msg,uid, gid )
+    sendmsg(msg, uid, gid)

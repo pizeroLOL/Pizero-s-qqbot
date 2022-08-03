@@ -148,15 +148,22 @@ def pokepoke(message, uid, gid):
 
 def DV(message, uid, gid):
     '''调用写好的数据可视化'''
-    match message:
-        case '#top20':
-            return DataVisualization.monthly_sendmsg_top20(uid, gid)
-        case '#月发信息表':
-            return DataVisualization.nmsm(uid, gid)
-        case '#活跃时间':
-            return DataVisualization.sinehtm(uid, gid)
-        case '#活跃时间散点图':
-            return DataVisualization.atsm(uid, gid)
+    types = 'private'
+    tf = True
+    if gid != None:
+        types = 'gourp'
+    if (types == 'private' and msglog_private_type != True) or (types == 'group' and msglog_group_type != True):
+        tf = False
+    if tf == True:
+        match message:
+            case '#top20':
+                return DataVisualization.monthly_sendmsg_top20(uid, gid)
+            case '#月发信息表':
+                return DataVisualization.nmsm(uid, gid)
+            case '#活跃时间':
+                return DataVisualization.sinehtm(uid, gid)
+            case '#活跃时间散点图':
+                return DataVisualization.atsm(uid, gid)
 
 
 def QAs_Q(message, uid, gid=None):
@@ -192,8 +199,8 @@ def finding_msg(finder, uid, gid):
         msgs = pd.read_csv(csv_path)
     except FileNotFoundError as err:
         GoCqhttpApi.sendmsg('无记录或未开启消息记录', uid, gid)
-    print(msgs)
-    print(msgs['message'])
+    # print(msgs)
+    # print(msgs['message'])
     tf_list = list(msgs.message.str.contains(finder))
     if True in tf_list:
         tf = True
@@ -293,14 +300,14 @@ def return_app():
     if request.get_json().get('message_type') == 'private':  # 如果是私聊信息
         uid = request.get_json().get('sender').get('user_id')  # 获取信息发送者的 QQ号码
         message = request.get_json().get('raw_message')  # 获取原始信息
-        keyword(message, uid)  # 将 Q号和原始信息传到我们的后台
         private(message, uid)
+        keyword(message, uid)  # 将 Q号和原始信息传到我们的后台
     if request.get_json().get('message_type') == 'group':  # 如果是群聊信息
         gid = request.get_json().get('group_id')  # 获取群号
         uid = request.get_json().get('sender').get('user_id')  # 获取信息发送者的 QQ号码
         message = request.get_json().get('raw_message')  # 获取原始信息
-        keyword(message, uid, gid)  # 将 Q号和原始信息传到我们的后台
         group(message, uid, gid)
+        keyword(message, uid, gid)  # 将 Q号和原始信息传到我们的后台
     return 'OK'
 
 
