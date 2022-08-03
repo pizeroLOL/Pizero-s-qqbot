@@ -51,10 +51,10 @@ jobs:
       - name: testing
         run: |
           mkdir test
-          cp ./dist/bot ./test
+          cp ./dist/bot.exe ./test
           cd test
-          chmod +x ./bot
-          ./bot -a
+          chmod +x ./bot.exe
+          ./bot.exe -a
           cd ../
       - name: upload
         uses: actions/upload-artifact@v3
