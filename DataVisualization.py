@@ -17,7 +17,7 @@ import GoCqhttpApi
 # csv_path = sys.argv[1]
 
 # 正常显示中文和负号
-plt.rcParams['font.sans-serif'] = ['MiSans','KaiTi','SimHei','FangSong','Ubuntu Mono']
+plt.rcParams['font.sans-serif'] = ['MiSans','KaiTi','SimHei','FangSong','Ubuntu Mono','NotoSans','Noto Sans CJK SC']
 plt.rcParams['axes.unicode_minus'] = False
 # 画图的样式风格设置为：ggplot
 plt.style.use('ggplot')
