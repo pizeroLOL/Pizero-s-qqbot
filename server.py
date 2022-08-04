@@ -10,7 +10,7 @@ import pandas as pd
 
 # 导入配置文件
 config = configparser.ConfigParser()
-config.read('app-config.cfg')
+config.read('app-config.cfg',encoding='utf-8')
 
 # 检查
 check.check()

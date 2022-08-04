@@ -8,7 +8,7 @@ import sys
 
 def start():
     config = configparser.ConfigParser()
-    config.read('app-config.cfg')
+    config.read('app-config.cfg',encoding='utf-8')
     check.check()
 
     # Function表
