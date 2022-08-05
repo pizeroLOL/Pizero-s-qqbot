@@ -41,7 +41,7 @@ def sendmsg(msg: str, uid: str | int, gid=None):
         gid = 'gid = '+gid
         print(msg+uid+gid)
     else:
-        if gid != None:
+        if gid != None or gid == 'None':
             requests.get(
                 'http://{0}:{1}/send_group_msg?group_id={2}&message={3}'.format(host, post, gid, msg))
         else:
