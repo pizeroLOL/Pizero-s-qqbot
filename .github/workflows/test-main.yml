@@ -1,0 +1,50 @@
+name: build
+
+on: [ push , pull_request ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v3
+      - name: setup Pyhon
+        id: setup-python
+        uses: actions/setup-python@v4.1.0
+        with:
+          python-version: '3.10'
+          architecture: x64
+      - uses: actions/cache@v3
+        with:
+          path: ~/.local/share/virtualenvs
+          key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-pipenv-${{ hashFiles('Pipfile.lock') }}
+      - name: Installing dependencies
+        run: |
+          python -m venv apps
+          apps/bin/activate
+          pip install -r requirePackage.txt
+          pip install pyinstaller
+      - name: build
+        run: |
+          pyinstaller ./bot.py -F
+      - name: testing
+        if: startsWith(runner.os, 'Linux')
+        run: |
+          wget https://cdn.cnbj1.fds.api.mi-img.com/vipmlmodel/font/MiSans/MiSans.zip
+          unzip MiSans.zip
+          mv 'MiSans 开发下载字重' MiSans
+          cp -r ./MiSans /usr/share/fonts/MiSans
+          mkdir test
+          cp ./dist/bot ./test
+          cd test
+          chmod +x ./bot
+          ./bot -a
+          cd ../
+      - name: upload
+        uses: actions/upload-artifact@v3
+        with: 
+          name: bot-${{ github.sha }}-${{ runner.os }}
+          path: ./dist/*
+      
