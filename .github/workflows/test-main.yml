@@ -24,8 +24,11 @@ jobs:
         run: |
           python -m venv apps
       - uses: actions/cache@v3
+        id: cache
         with:
-          path: ~/.local/share/virtualenvs
+          path: |
+            ~/.local/share/virtualenvs
+            ./MiSans
           key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-pipenv-${{ hashFiles('Pipfile.lock') }}
       - name: run venv
         if: startsWith(runner.os, 'macOS')
@@ -47,19 +50,25 @@ jobs:
       - name: Build
         run: |
           pyinstaller ./bot.py -F
-      # - name: testing
-      #   if: startsWith(runner.os, 'Linux')
-      #   run: |
-      #     wget https://cdn.cnbj1.fds.api.mi-img.com/vipmlmodel/font/MiSans/MiSans.zip
-      #     unzip MiSans.zip
-      #     mv ''
-      #     cp -r ./MiSans /usr/share/fonts/MiSans
-      #     mkdir test
-      #     cp ./dist/bot ./test
-      #     cd test
-      #     chmod +x ./bot
-      #     ./bot -a
-      #     cd ../
+      - name: DL Font
+        if: |
+          startsWith(runner.os, 'Linux')
+          steps.cache.outputs.cache-hit != 'true'
+        run: | 
+          wget https://cdn.cnbj1.fds.api.mi-img.com/vipmlmodel/font/MiSans/MiSans.zip
+          unzip MiSans.zip
+          mv './MiSans 开发下载字重' ./MiSans
+          
+      - name: testing
+        if: startsWith(runner.os, 'Linux')
+        run: |
+          cp -r ./MiSans /usr/share/fonts/MiSans
+          mkdir test
+          cp ./dist/bot ./test
+          cd test
+          chmod +x ./bot
+          ./bot -a
+          cd ../
       - name: upload
         uses: actions/upload-artifact@v3
         with:
