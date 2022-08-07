@@ -23,6 +23,10 @@ jobs:
       - name: setup-venv
         run: |
           python -m venv apps
+      - uses: actions/cache@v3
+        with:
+          path: ~/.local/share/virtualenvs
+          key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-pipenv-${{ hashFiles('Pipfile.lock') }}
       - name: run venv
         if: startsWith(runner.os, 'macOS')
         run: |
@@ -48,6 +52,7 @@ jobs:
       #   run: |
       #     wget https://cdn.cnbj1.fds.api.mi-img.com/vipmlmodel/font/MiSans/MiSans.zip
       #     unzip MiSans.zip
+      #     mv ''
       #     cp -r ./MiSans /usr/share/fonts/MiSans
       #     mkdir test
       #     cp ./dist/bot ./test
