@@ -52,7 +52,6 @@ jobs:
           pyinstaller ./bot.py -F
       - name: DL Font
         if: |
-          startsWith(runner.os, 'Linux')
           steps.cache.outputs.cache-hit != 'true'
         run: | 
           wget https://cdn.cnbj1.fds.api.mi-img.com/vipmlmodel/font/MiSans/MiSans.zip
