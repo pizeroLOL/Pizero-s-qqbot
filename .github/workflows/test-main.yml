@@ -22,6 +22,7 @@ jobs:
       - name: Installing dependencies
         run: |
           python -m venv apps
+          chmod +x ./apps/bin/activate
           ./apps/bin/activate
           pip install -r requirePackage.txt
           pip install pyinstaller
