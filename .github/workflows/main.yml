@@ -28,7 +28,6 @@ jobs:
         with:
           path: |
             ~/.local/share/virtualenvs
-            ./MiSans
           key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-pipenv-${{ hashFiles('Pipfile.lock') }}
       - name: run venv
         if: startsWith(runner.os, 'macOS')
@@ -51,8 +50,7 @@ jobs:
         run: |
           pyinstaller ./bot.py -F
       - name: DL Font
-        if: |
-          steps.cache.outputs.cache-hit != 'true'
+        if: startsWith(runner.os, 'Linux')
         run: | 
           wget https://cdn.cnbj1.fds.api.mi-img.com/vipmlmodel/font/MiSans/MiSans.zip
           unzip MiSans.zip
