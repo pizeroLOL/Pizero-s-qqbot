@@ -2,6 +2,7 @@ import check
 import server
 import os
 
+
 def command_test():
     check.check()
     while True:

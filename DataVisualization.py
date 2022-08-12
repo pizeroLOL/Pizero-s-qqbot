@@ -12,18 +12,18 @@ import os
 import sys
 import time
 import GoCqhttpApi
+from sqlalchemy import create_engine
 
-# 常用参数导入
-# csv_path = sys.argv[1]
 
 # 正常显示中文和负号
-plt.rcParams['font.sans-serif'] = ['MiSans','HeiTi','KaiTi','SimHei','Song','Fangsong','Ubuntu Mono','NotoSans','Noto Sans CJK SC','Microsoft Yahei','Heiti SC Medium']
+plt.rcParams['font.sans-serif'] = ['MiSans', 'HeiTi', 'KaiTi', 'SimHei', 'Song', 'Fangsong',
+                                   'Ubuntu Mono', 'NotoSans', 'Noto Sans CJK SC', 'Microsoft Yahei', 'Heiti SC Medium']
 plt.rcParams['axes.unicode_minus'] = False
 # 画图的样式风格设置为：ggplot
 plt.style.use('ggplot')
 
-# # 读取 csv
-# df = None
+# 设置数据库地址
+engine = create_engine('sqlite:///bot.db')
 
 
 class PermissionError(BaseException):
@@ -31,28 +31,32 @@ class PermissionError(BaseException):
     ...
 
 
-def read_csv(uid: str | int, gid: str | int, msglog_path: str, types: str):
-    '''读取 csv'''
-    global df, uid_step, msglog_paths
-    if gid != None:
-        path = msglog_path + '/gid-' + \
-            str(gid)+'/'+time.strftime("%Y-%m", time.localtime())+'.csv'
+def read_sqlite_db(uid: str | int, gid: str | int, types: str):
+    '''读取 sqlite database'''
+    global df, uid_step
+    if gid != None or gid != 'None':
+        table = 'gid-' + \
+            str(gid)
     else:
-        path = msglog_path + '/uid-'+str(uid)+'/'+time.strftime("%Y-%m", time.localtime())+'.csv'
+        table = 'uid-' + \
+            str(uid)
+
     try:
-        with open(path, 'r', encoding='utf-8') as csv:
-            df = pd.read_csv(csv)
+        sql_tabel = open(table, 'r', encoding='utf-8')
+    except PermissionError:
+        return GoCqhttpApi.sendmsg('无该群聊记录或填写错误', uid, gid)
+    except FileNotFoundError as e:
+        return GoCqhttpApi.sendmsg('无聊天文件', uid, gid)
+    else:
+        with sql_tabel:
+            df = pd.read_sql(sql_tabel, engine)
         """时间格式转换"""
         df['time'] = pd.to_datetime(df['time'], format='%Y-%m-%d %H:%M:%S')
         # print(df)
-        return table_conversion(uid, gid,  types, msglog_path)
-    except PermissionError as e:
-        return GoCqhttpApi.sendmsg('无该群聊记录或填写错误', uid, gid)
-    # except FileNotFoundError as e:
-    #     return GoCqhttpApi.sendmsg('无聊天文件', uid, gid)
+        return table_conversion(types)
 
 
-def table_conversion(uid: str, gid: str, types: str, msglog_path='./msglog'):
+def table_conversion(types: str):
     df['hour'] = df['time'].dt.hour
     df['minute'] = df['time'].dt.minute
     df['second'] = df['time'].dt.second
@@ -82,9 +86,9 @@ def table_conversion(uid: str, gid: str, types: str, msglog_path='./msglog'):
             return msg_prehours
 
 
-def monthly_sendmsg_top20(uid: str | int, gid: str | int, msglog_path='./msglog'):
+def monthly_sendmsg_top20(uid: str | int, gid: str | int):
     '''消息发送top20'''
-    uid_top = read_csv(uid, gid, msglog_path, 'uid_top')
+    uid_top = read_sqlite_db(uid, gid, 'uid_top')
     # try:
     tmp_fm = uid_top.head(20)
     tmp_fm2list_1 = list(tmp_fm['uid'])
@@ -102,14 +106,14 @@ def monthly_sendmsg_top20(uid: str | int, gid: str | int, msglog_path='./msglog'
     # print(msg)
 
 
-def nmsm(uid: str | int, gid: str | int, msglog_path='./msglog'):
+def nmsm(uid: str | int, gid: str | int):
     '''当月单位消息数发送成员数'''
-    return the_number_of_units_in_the_month_of_the_month_sent_the_number_of_members(uid, gid, msglog_path)
+    return the_number_of_units_in_the_month_of_the_month_sent_the_number_of_members(uid, gid)
 
 
-def the_number_of_units_in_the_month_of_the_month_sent_the_number_of_members(uid: str | int, gid: str | int, msglog_path='./msglog'):
+def the_number_of_units_in_the_month_of_the_month_sent_the_number_of_members(uid: str | int, gid: str | int):
     '''当月单位消息数发送成员数'''
-    uid_step = read_csv(uid, gid, msglog_path, 'uid_step')
+    uid_step = read_sqlite_db(uid, gid, 'uid_step')
     # try:
     plt.figure(figsize=(5, 3))
     plt.subplot(1, 1, 1)
@@ -126,14 +130,14 @@ def the_number_of_units_in_the_month_of_the_month_sent_the_number_of_members(uid
     #     GoCqhttpApi.sendmsg('请检查msglog是否正常或是否开启')
 
 
-def atsm(uid: str | int, gid: str | int, msglog_path='./msglog'):
+def atsm(uid: str | int, gid: str | int):
     '''活跃时间散点图'''
-    return active_time_scatter_map(uid, gid, msglog_path)
+    return active_time_scatter_map(uid, gid)
 
 
-def active_time_scatter_map(uid: str | int, gid: str | int, msglog_path='./msglog'):
+def active_time_scatter_map(uid: str | int, gid: str | int):
     '''活跃时间散点图'''
-    msg_presecend = read_csv(uid, gid, msglog_path, 'msg_presecend')
+    msg_presecend = read_sqlite_db(uid, gid, 'msg_presecend')
     msg_presecend.plot.scatter(x='消息数', y='时间-小时与分钟')
     plt.savefig('活跃时间散点图')
     prefix = 'file:///'
@@ -146,13 +150,13 @@ def active_time_scatter_map(uid: str | int, gid: str | int, msglog_path='./msglo
     # plt.show()`
 
 
-def sinehtm(uid: str | int, gid: str | int, msglog_path='./msglog'):
-    return send_information_number_every_hour_that_month(uid, gid, msglog_path)
+def sinehtm(uid: str | int, gid: str | int):
+    return send_information_number_every_hour_that_month(uid, gid)
 
 
-def send_information_number_every_hour_that_month(uid: str | int, gid: str | int, msglog_path='./msglog'):
+def send_information_number_every_hour_that_month(uid: str | int, gid: str | int):
     '''当月每小时发送信息条数折线图'''
-    msg_prehours = read_csv(uid, gid,  msglog_path, 'msg_prehours')
+    msg_prehours = read_sqlite_db(uid, gid, 'msg_prehours')
     # print(msg_prehours)
     msg_prehours.plot(x='小时', y='消息数')
     plt.savefig('每小时在线分布')

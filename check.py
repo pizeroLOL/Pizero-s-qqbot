@@ -7,7 +7,7 @@ def check():
     '''检查配置文件'''
     # 导入配置文件
     config = configparser.ConfigParser()
-    config.read('app-config.cfg',encoding='utf-8')
+    config.read('app-config.cfg', encoding='utf-8')
 
     '''初始化
     默认变量在第十行，变量名为configlist，包含Function、id、main、request'''
@@ -44,7 +44,7 @@ def check():
             elif config.has_option(i, n) == False and n == 'request-post':
                 config[i][n] = '20300'
     '''保存为app-config.cfg'''
-    with open('app-config.cfg', 'w',encoding='utf-8') as configfile:
+    with open('app-config.cfg', 'w', encoding='utf-8') as configfile:
         config.write(configfile)
     '''QAs'''
     file_path = './QAs.csv'

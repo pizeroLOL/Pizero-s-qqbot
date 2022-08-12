@@ -3,7 +3,7 @@ import configparser
 import time
 
 config = configparser.ConfigParser()
-config.read('app-config.cfg',encoding='utf-8')
+config.read('app-config.cfg', encoding='utf-8')
 
 uid_topsecret = config['request']
 host = str(uid_topsecret['request-host'])

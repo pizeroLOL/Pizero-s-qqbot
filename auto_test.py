@@ -12,25 +12,34 @@ msgs = ['[CQ:at,qq=123456789]', 'jrrp', '今日人品', '#点歌 wyyyy 132456789
         '可乐兔三连', '#poke', '#poke 13254448', '#top20', '#月发信息表', '#活跃时间',
         '#活跃时间散点图', '#全部问题', '#消息查询', '#消息查询 jrrp']
 
-def test(to_str = None):
+
+def test(to_str=None):
+
     for i in range(len(msgs)):
         uid = random.randint(10000, 1000000000)
         gid = random.randint(10000, 1000000000)
-        if to_str != None:
-            uid = str(uid)
-            gid = str(gid)
-        server.group(msgs[i],uid,gid)
-        server.keyword(msgs[i], uid, gid)
-        server.private(msgs[i],uid)
-        server.keyword(msgs[i], uid)
+        for n in range(3):
+            if to_str != None:
+                uid = str(uid)
+                gid = str(gid)
+            server.group(msgs[i], uid, gid)
+            server.keyword(msgs[i], uid, gid)
+            server.private(msgs[i], uid)
+            server.keyword(msgs[i], uid)
+
 
 def one_test():
     test()
     print('\n\n\nfinished int\n\n\n')
-    test('str')    
+    test('str')
     print('\n\n\nfinished str\n\n\n')
+
 
 def test_flow():
     check.check()
     print('\n\n\ncheck!\n\n\n')
     one_test()
+
+
+if __name__ == '__main__':
+    test_flow()

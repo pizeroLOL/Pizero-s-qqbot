@@ -1,4 +1,5 @@
 from flask import Flask, request
+from sqlalchemy import create_engine
 import configparser
 import GoCqhttpApi
 import DataVisualization
@@ -10,7 +11,7 @@ import pandas as pd
 
 # 导入配置文件
 config = configparser.ConfigParser()
-config.read('app-config.cfg',encoding='utf-8')
+config.read('app-config.cfg', encoding='utf-8')
 
 # 检查
 check.check()
@@ -52,6 +53,7 @@ del id_topsecret, Function_topsecret, main_topsecret
 diff_time = None
 msg_step = 0
 gid = None
+engine = create_engine('sqlite:///bot.db')
 
 
 def keyword(message, uid, gid=None):
@@ -186,17 +188,15 @@ def find_msg(message, uid, gid=None):
         finding_msg(finder, uid, gid)
 
 
-def finding_msg(finder, uid, gid):
+def finding_msg(finder, uid, gid=None):
     uid = str(uid)
     finder = str(finder)
     if gid != None:
         prefix = 'gid-'+gid
     else:
         prefix = 'uid-'+uid
-    csv_path = './msglog/'+prefix+'/' + \
-        time.strftime("%Y-%m", time.localtime())+'.csv'
     try:
-        msgs = pd.read_csv(csv_path)
+        msgs = pd.read_sql(prefix, engine)
     except FileNotFoundError as err:
         GoCqhttpApi.sendmsg('无记录或未开启消息记录', uid, gid)
     # print(msgs)
@@ -215,18 +215,6 @@ def finding_msg(finder, uid, gid):
         GoCqhttpApi.sendmsg(msg, uid, gid)
     else:
         GoCqhttpApi.sendmsg('无符合条件的消息', uid, gid)
-# def QQ(message,uid,gid):
-#     if message == '?':
-#         GoCqhttpApi.sendmsg('?',uid,gid)
-
-# 应用模块例子
-# def xxxxx(xxx,xxx,xxx):
-    # msg=''
-    # sendmsg(msg,uid,gid)
-
-# msg为发送的信息
-# uid为发送者
-# gid为收到消息的群
 
 
 def others_poke(message, uid, gid):
@@ -254,20 +242,13 @@ def group(msg, uid, gid):
     if msglog_group_type == True:
         gid = str(gid)
         timeis = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        file_path = './msglog/'+'gid-'+gid+'/' + \
-            time.strftime("%Y-%m", time.localtime())+'.csv'
-        tmpfm = pd.DataFrame({
+        df = pd.DataFrame({
             'message': [msg],
             'time': [timeis],
             'uid': [uid],
             'gid': [gid]
         })
-        if os.path.exists('./msglog/gid-'+gid) == False:
-            os.makedirs('msglog/gid-'+gid)
-        if os.path.isfile(file_path) == True:
-            tmpfm.to_csv(file_path, index=None, header=False, mode='a')
-        elif os.path.isfile(file_path) == False:
-            tmpfm.to_csv(file_path, index=None, mode='w')
+        df.to_sql('gid-'+uid, engine, if_exists='append', index=False)
 
 
 def private(msg, uid):
@@ -275,19 +256,12 @@ def private(msg, uid):
         uid = str(uid)
         timeis = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         # columns = ['msg','uid','gid']
-        file_path = './msglog/uid-'+uid+'/' + \
-            time.strftime("%Y-%m", time.localtime())+'.csv'
-        tmpfm = pd.DataFrame({
+        df = pd.DataFrame({
             'message': [msg],
             'time': [timeis],
             'uid': [uid]
         })
-        if os.path.exists('./msglog/uid-'+uid) == False:
-            os.makedirs('msglog/uid-'+uid)
-        if os.path.isfile(file_path) == True:
-            tmpfm.to_csv(file_path, index=None, header=False, mode='a')
-        elif os.path.isfile(file_path) == False:
-            tmpfm.to_csv(file_path, index=None, mode='w')
+        df.to_sql('uid-'+uid, engine, if_exists='append', index=False)
 
 
 # 服务端本体

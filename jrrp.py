@@ -2,43 +2,61 @@ import GoCqhttpApi
 import time
 import random
 import configparser
+import sqlalchemy
+import pandas as pd
 
 config = configparser.ConfigParser()
-config.read('app-config.cfg',encoding='utf-8')
+config.read('app-config.cfg', encoding='utf-8')
 
 Function_topsecret = config['Function']
 jrrp_type = Function_topsecret.getboolean('jrrp')
 
+engine = sqlalchemy.create_engine('sqlite:///bot.db')
 
-def jrrp(types, uid, gid):  # 今日人品
+
+def new_rp(uid):
+    '''新的当日人品'''
+    timeis = time.strftime("%Y-%m-%d", time.localtime())
+    rp = random.randrange(0, 100, 1)  # 获得一个随机数
+    df = pd.DataFrame([{
+        'date': timeis,
+        'id': uid,
+        'rp': rp,
+    }])
+    df.to_sql('jrrp', engine, if_exists='append', index=False)
+    return rp
+
+
+def Q_jrrp(uid):
+    """查询今日人品"""
+    '''获取时间，格式为年-月-日'''
+    timeis = time.strftime("%Y-%m-%d", time.localtime())
+    '''读取sql的今日人品, 如果没有数据库文件就新建'''
+    try:
+        df = pd.read_sql('jrrp', engine)
+    except sqlalchemy.exc.OperationalError:
+        return new_rp(uid)
+    '''检测是否有当日的人品'''
+    if timeis not in df['date'].values:
+        return new_rp(uid)
+    today_df = df.loc[df['date'].str.contains(timeis)]
+    '''检测当日人品是否有当前uid'''
+    if uid not in today_df['id'].values:
+        return new_rp(uid)
+    today_df = today_df.set_index('id')
+    return today_df.loc[uid, 'rp']
+
+
+def jrrp(types, uid, gid=None):
+    '''今日人品'''
     if jrrp_type == True:
-        timeis = time.strftime("%Y-%m-%d", time.localtime())  # 收到时间，格式为年-月-日
-        config.read('jrrp.ini',encoding='utf-8')  # 读取jrrp.ini
-        if config.has_section(timeis) == False:  # 判断文件中是否有时间相对应的表，没有则创捷
-            config.add_section(timeis)
-            with open('jrrp.ini', 'w',encoding='utf-8') as configfile:  # 写入jrrp.ini
-                config.write(configfile)
-        if config.has_option(timeis, str(uid)) == False:  # 有没有uid对应的项,没有就创建
-            rp = random.randrange(0, 100, 1)  # 获得一个随机数
-            config[timeis][str(uid)] = str(rp)  # 创建一个uid所对的项
-            with open('jrrp.ini', 'w',encoding='utf8') as configfile:
-                config.write(configfile)
+        rp = str(Q_jrrp(uid))
         match types:
             case 'self':
-                topsecret = config[timeis]  # 选中当前时间的表
-                rp = topsecret[str(uid)]  # 发出将人品与表中uid相对
-                rp = str(rp)
-                if gid != None:
+                msg = '你的人品为'+rp
+                if gid != None or gid != 'None':
                     msg = '[CQ:at,qq='+uid+']你的人品为'+rp
-                    GoCqhttpApi.sendmsg(msg, uid, gid)
-                    if int(rp) < 20:
-                        GoCqhttpApi.poke(uid, gid)
-                else:
-                    msg = '你的人品为'+rp
-                    GoCqhttpApi.sendmsg(msg, uid)
+                GoCqhttpApi.sendmsg(msg, uid, gid)
             case 'others':
-                topsecret = config[timeis]  # 选中当前时间的表
-                rp = topsecret[str(uid)]  # 发出将人品与表中uid相对
-                rp = str(rp)
                 msg = str(uid)+'的人品为'+rp
                 GoCqhttpApi.sendmsg(msg, uid, gid)

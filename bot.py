@@ -1,5 +1,6 @@
 import check
 import server
+import to_sqlite
 import configparser
 import auto_test
 import cmd_test
@@ -8,7 +9,7 @@ import sys
 
 def start():
     config = configparser.ConfigParser()
-    config.read('app-config.cfg',encoding='utf-8')
+    config.read('app-config.cfg', encoding='utf-8')
     check.check()
 
     # Function表
@@ -28,8 +29,13 @@ if len(sys.argv) != 2:
 else:
     match sys.argv[1]:
         case '--help' | '-h':
-            print('-a\t--auto-test\t执行自动测试脚本\n-c\t--command-test\t手动命令行测试')
+            print(
+                '-a\t--auto-test\t执行自动测试脚本\n'+
+                '-c\t--command-test\t手动命令行测试\n'+
+                '-C\t--convert-to-sqlite\tmsglog与jrrp.ini转换到sqlite')
         case '--auto-test' | '-a':
             auto_test.test_flow()
         case '--command-test' | '-c':
             cmd_test.command_test()
+        case '--convert-to-sqlite'|'-C':
+            to_sqlite.convert_flow()
