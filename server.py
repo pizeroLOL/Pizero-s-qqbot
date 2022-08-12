@@ -145,7 +145,12 @@ def eggs(message, uid, gid):
 def pokepoke(message, uid, gid):
     '''戳人'''
     if message[0: 5] == '#poke' or message[0:2] == '#戳' or message[0:4] == '#戳一戳':
-        return others_poke(message, uid, gid)
+        print(message+uid)
+        if len(message) > 8:
+            return others_poke(message, uid, gid)
+        else:
+            message = '#poke '+str(uid)
+            return others_poke(message, uid, gid)
 
 
 def DV(message, uid, gid):
@@ -219,11 +224,11 @@ def finding_msg(finder, uid, gid=None):
 
 def others_poke(message, uid, gid):
     if message[0: 5] == '#poke':
-        uid = message[5:]
+        uid = message[6:]
     elif message[0:2] == '#戳':
         uid = message[3:]
     elif message[0:4] == '#戳一戳':
-        uid = message[4:]
+        uid = message[5:]
     GoCqhttpApi.poke(uid, gid)
 
 
@@ -248,7 +253,7 @@ def group(msg, uid, gid):
             'uid': [uid],
             'gid': [gid]
         })
-        df.to_sql('gid-'+uid, engine, if_exists='append', index=False)
+        df.to_sql('gid-'+gid, engine, if_exists='append', index=False)
 
 
 def private(msg, uid):

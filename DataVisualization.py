@@ -34,26 +34,15 @@ class PermissionError(BaseException):
 def read_sqlite_db(uid: str | int, gid: str | int, types: str):
     '''读取 sqlite database'''
     global df, uid_step
-    if gid != None or gid != 'None':
-        table = 'gid-' + \
-            str(gid)
-    else:
-        table = 'uid-' + \
-            str(uid)
-
-    try:
-        sql_tabel = open(table, 'r', encoding='utf-8')
-    except PermissionError:
-        return GoCqhttpApi.sendmsg('无该群聊记录或填写错误', uid, gid)
-    except FileNotFoundError as e:
-        return GoCqhttpApi.sendmsg('无聊天文件', uid, gid)
-    else:
-        with sql_tabel:
-            df = pd.read_sql(sql_tabel, engine)
-        """时间格式转换"""
-        df['time'] = pd.to_datetime(df['time'], format='%Y-%m-%d %H:%M:%S')
-        # print(df)
-        return table_conversion(types)
+    table = 'gid-' + str(gid)
+    if gid == None or gid == 'None':
+        table = 'uid-' + str(uid)
+    print (table)
+    df = pd.read_sql(table, engine)
+    """时间格式转换"""
+    df['time'] = pd.to_datetime(df['time'], format='%Y-%m-%d %H:%M:%S')
+    # print(df)
+    return table_conversion(types)
 
 
 def table_conversion(types: str):
@@ -125,6 +114,7 @@ def the_number_of_units_in_the_month_of_the_month_sent_the_number_of_members(uid
     paths = prefix + \
         os.path.split(os.path.realpath(sys.argv[0]))[0] + '\发送消息分布.png'
     # print(paths)
+    plt.close()
     GoCqhttpApi.image(uid, gid, paths)
     # except AttributeError as e:
     #     GoCqhttpApi.sendmsg('请检查msglog是否正常或是否开启')
@@ -146,6 +136,7 @@ def active_time_scatter_map(uid: str | int, gid: str | int):
     paths = prefix + \
         os.path.split(os.path.realpath(sys.argv[0]))[0] + '\活跃时间散点图.png'
     # print(paths)
+    plt.close()
     GoCqhttpApi.image(uid, gid, paths)
     # plt.show()`
 
@@ -166,6 +157,7 @@ def send_information_number_every_hour_that_month(uid: str | int, gid: str | int
     paths = prefix + \
         os.path.split(os.path.realpath(sys.argv[0]))[0] + '\每小时在线分布.png'
     # print(paths)
+    plt.close()
     GoCqhttpApi.image(uid, gid, paths)
     # plt.show()
 
