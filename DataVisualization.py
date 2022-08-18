@@ -37,7 +37,6 @@ def read_sqlite_db(uid: str | int, gid: str | int, types: str):
     table = 'gid-' + str(gid)
     if gid == None or gid == 'None':
         table = 'uid-' + str(uid)
-    print (table)
     df = pd.read_sql(table, engine)
     """时间格式转换"""
     df['time'] = pd.to_datetime(df['time'], format='%Y-%m-%d %H:%M:%S')
