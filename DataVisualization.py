@@ -45,13 +45,16 @@ def read_sqlite_db(uid: str | int, gid: str | int, types: str):
 
 
 def table_conversion(types: str):
+    df['year'] = df['time'].dt.year
+    df['month'] = df['time'].dt.month
     df['hour'] = df['time'].dt.hour
     df['minute'] = df['time'].dt.minute
     df['second'] = df['time'].dt.second
     df['float_hours'] = df['hour'] + df['minute']/60
     match types:
         case 'uid_step' | 'uid_top':
-            uid_step = df['uid'].value_counts()
+            mid_tmp = df.query('year == {0} and month == {1}'.format(,))
+            uid_step = mid_tmp['uid'].value_counts()
             uid_step.columns = ['左uidX，右次数']
             if types == 'uid_top':
                 uid_top = uid_step.reset_index()
