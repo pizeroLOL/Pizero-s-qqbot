@@ -53,7 +53,7 @@ def table_conversion(types: str):
     df['float_hours'] = df['hour'] + df['minute']/60
     match types:
         case 'uid_step' | 'uid_top':
-            mid_tmp = df.query('year == {0} and month == {1}'.format(,))
+            mid_tmp = df.query('year == {0} and month == {1}'.format(time.strftime("%Y", time.localtime()),time.strftime("%m", time.localtime())))
             uid_step = mid_tmp['uid'].value_counts()
             uid_step.columns = ['左uidX，右次数']
             if types == 'uid_top':
